@@ -128,7 +128,6 @@ void readFromStream(std::ifstream& targetFile)
         alphabet.addLetter(output);
     }
 
-    targetFile.close();
     alphabet.printTree();
 }
 
@@ -147,6 +146,10 @@ int main()
     {
         std::cout << "File not found or error opening file." << std::endl;
     }
+
+    targetFile.close();
+
+    std::cout << "________ " << targetFile.is_open() << std::endl;
 
     return 0;
 }
