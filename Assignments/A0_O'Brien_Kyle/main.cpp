@@ -22,10 +22,11 @@ private:
         LetterNode* rightChild = nullptr;
     };
 
-    LetterNode* rootNode;
-    int numNodes;
+    LetterNode* rootNode = nullptr;
+    int numNodes = 0;
 
     // Recursive Auxiliary Functions
+    void initLetters();
     void printTree(LetterNode* parentNode);
     void addLetter(char newLetter, LetterNode*& parentNode);
 
@@ -39,8 +40,13 @@ public:
 
 LetterTree::LetterTree()
 {
-    rootNode = nullptr;
-    numNodes = 0;
+    initLetters();
+}
+
+void LetterTree::initLetters() {
+    for (char letter = 'A'; letter <= 'Z'; letter++) {
+        addLetter(letter);
+    }
 }
 
 // Class Methods
@@ -54,7 +60,6 @@ void LetterTree::addLetter(char newLetter)
         {
             rootNode = new LetterNode;
             rootNode->letter = newLetter;
-            rootNode->occurrences = 1;
             numNodes++;
         }
         else if (newLetter == rootNode->letter)
@@ -74,7 +79,6 @@ void LetterTree::addLetter(char newLetter, LetterNode*& parentNode)
     {
         parentNode = new LetterNode;
         parentNode->letter = newLetter;
-        parentNode->occurrences = 1;
         numNodes++;
     }
     else if (newLetter == parentNode->letter)
