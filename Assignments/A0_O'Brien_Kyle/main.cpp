@@ -7,6 +7,10 @@ std::string getFileURL();
 
 // The LetterTree class is implemented as a Binary Search Tree.
 
+// I implemented this program as such so that all comparisons in O(log(n)) time rather than O(26)
+// time if I implemented the alphabet as an array. This difference will become apparent as
+// the size of the text file increases exponentially.
+
 class LetterTree
 {
 private:
@@ -139,7 +143,6 @@ int main()
 
     if (targetFile.is_open())
     {
-        std::cout << "File URL: " << fileURL << std::endl << std::endl;
         readFromStream(targetFile);
     }
     else
@@ -148,8 +151,6 @@ int main()
     }
 
     targetFile.close();
-
-    std::cout << "________ " << targetFile.is_open() << std::endl;
 
     return 0;
 }
