@@ -1,3 +1,9 @@
+// Kyle O'Brien
+// 8-31-2017
+// CS 17.11 - Java Programming
+// Compiled with the Jetbrains C-Lion IDE on Mac. Tested on Visual Studio Community as well.
+// Assignment 0
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -7,8 +13,8 @@ std::string getFileURL();
 
 // The LetterTree class is implemented as a Binary Search Tree.
 
-// I implemented this program as such so that all comparisons in O(log(n)) time rather than O(26)
-// time if I implemented the alphabet as an array. This difference will become apparent as
+// I implemented this program as such so that all comparisons in O(log(n)) time rather than O(n)
+// time if I implemented the alphabet as an array. This difference should become apparent as
 // the size of the text file increases exponentially.
 
 class LetterTree
@@ -38,6 +44,8 @@ public:
 
 };
 
+// Class Methods
+
 LetterTree::LetterTree()
 {
     initLetters();
@@ -48,8 +56,6 @@ void LetterTree::initLetters() {
         addLetter(letter);
     }
 }
-
-// Class Methods
 
 void LetterTree::addLetter(char newLetter)
 {
