@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
  *
  * @author 
  */
-public class  FXMLDocumentController implements Initializable
+public class UIController implements Initializable
 {
 
     @FXML
