@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 
 /**
  *
@@ -20,28 +19,179 @@ import javafx.scene.text.Text;
  */
 public class  FXMLDocumentController implements Initializable
 {
-    
-    @FXML
-    private Label label;
 
     @FXML
-    private TextField txtName;
+    private TextField screen;
 
-    @FXML
-    private void handleButtonAction(ActionEvent event)
+    private void sendInputToController()
     {
-        System.out.println("You clicked me!");
-        if (txtName.getText().length() > 0)
+        // Stuff
+    }
+
+    @FXML
+    private void handleEnterClicked(ActionEvent event)
+    {
+        if (screen.getText().length() == 0)
         {
-            label.setText("Hello there " + txtName.getText() + "!");
+            screen.setText("No Value");
         }
         else
         {
-            label.setText("Can't you follow directions?");
+            sendInputToController();
+        }
+    }
+
+    @FXML
+    private void handleDivideClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + " / ");
+    }
+
+    @FXML
+    private void handleMultiplyClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + " * ");
+    }
+
+    @FXML
+    private void handleMinusClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + " - ");
+    }
+
+    @FXML
+    private void handleAddClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + " + ");
+    }
+
+    @FXML
+    private void handleLeftBraceClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + "(");
+    }
+
+    @FXML
+    private void handleRightBraceClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + ")");
+    }
+
+    @FXML
+    private void handleDeleteClicked(ActionEvent event)
+    {
+        int textLength = screen.getText().length();
+
+        if (textLength != 0)
+        {
+            if (textLength == 1) {
+                screen.clear();
+            }
+            else if (textLength == 2) {
+                char newText = screen.getText().charAt(0);
+                screen.setText(Character.toString(newText));
+            }
+            else {
+                String newText = screen.getText().substring(0, textLength - 1);
+                screen.setText(newText);
+            }
         }
 
     }
-    
+
+    private void checkForEmptyMessage()
+    {
+        if (screen.getText().equals("No Value"))
+        {
+            screen.clear();
+        }
+    }
+
+
+    @FXML
+    private void handleNumberOneButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 1);
+    }
+
+    @FXML
+    private void handleNumberTwoButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 2);
+    }
+
+    @FXML
+    private void handleNumberThreeButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 3);
+    }
+
+    @FXML
+    private void handleNumberFourButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 4);
+    }
+
+    @FXML
+    private void handleNumberFiveButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 5);
+    }
+
+    @FXML
+    private void handleNumberSixButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 6);
+    }
+
+    @FXML
+    private void handleNumberSevenButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 7);
+    }
+
+    @FXML
+    private void handleNumberEightButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 8);
+    }
+
+    @FXML
+    private void handleNumberNineButtonClicked(ActionEvent event)
+    {
+        checkForEmptyMessage();
+        final String currentInput = screen.getText();
+        screen.setText(currentInput + 9);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
