@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 public class JavaFXApplicationTemplate extends Application
 {
+    public final String electricData = "pge_electric_interval_data_2016-01-01_to_2016-02-28.csv";
+    public final String gascData = "pge_gas_interval_data_2016-01-01_to_2016-03-01.csv";
+    public final String temperatureData = "KCASONOM43.csv";
     
     @Override
     public void start(Stage stage) throws Exception
