@@ -13,34 +13,7 @@ public class CSVParseOperations
 {
     static public String[] returnData(String filePath)
     {
-        String[] returnData = {};
-
-        Scanner csvReader = null;
-        File csvDataFile = new File(System.getProperty("user.dir") + "/" + filePath);
-
-        if (csvDataFile.exists())
-        {
-            try
-            {
-                csvReader = new Scanner(csvDataFile);
-
-                while (csvReader.hasNextLine())
-                {
-                    String output = csvReader.nextLine();
-
-                    if (!output.equals("") && output.charAt(0) != '#')
-                    {
-                        WeatherDataPoint newData = new WeatherDataPoint(output);
-                        allWeatherData.add(newData);
-                    }
-
-                }
-            } catch (FileNotFoundException e)
-            {
-                System.out.println("Cannot open that file.");
-                System.out.println("Exception: " + e.getMessage());
-            }
-        }
+       String[] returnData = {};
 
         return returnData;
     }
@@ -49,12 +22,9 @@ public class CSVParseOperations
     {
         ArrayList<ElectricDataPoint> data = new ArrayList<>();
 
-        String[] data = csvData.split(",");
 
-        if (data.length >= 7) {
 
-        }
-
+        return data;
     }
 
     static public ArrayList<GasDataPoint> parseGasData(String filePath)
