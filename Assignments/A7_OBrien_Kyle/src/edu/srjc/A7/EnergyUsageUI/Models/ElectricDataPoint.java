@@ -35,4 +35,13 @@ public class ElectricDataPoint
         this.cumulativeUsage = cumulativeUsage;
     }
 
+    @Override
+    public String toString()
+    {
+        return "ElectricDataPoint{" +
+                "date='" + date + '\'' +
+                ", cumulativeUsage=" + cumulativeUsage +
+                '}';
+    }
+
 }
