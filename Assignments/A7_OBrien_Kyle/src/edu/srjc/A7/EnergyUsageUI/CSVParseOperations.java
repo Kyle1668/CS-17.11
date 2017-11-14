@@ -7,6 +7,7 @@ import edu.srjc.A7.EnergyUsageUI.Models.TemperatureDataPoint;
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.lang.StringBuilder;
 import java.io.FileNotFoundException;
 
 public class CSVParseOperations
@@ -43,7 +44,7 @@ public class CSVParseOperations
 
     private static ArrayList<ElectricDataPoint> getElectricUsageSummary(Scanner fReader)
     {
-        ArrayList<ElectricDataPoint> dailyPowerUsage = new ArrayList<ElectricDataPoint>();
+        ArrayList<ElectricDataPoint> dailyPowerUsage = new ArrayList<>();
         double lineUsageData = 0.0;
         String lineDate = "N/A";
 
@@ -93,22 +94,70 @@ public class CSVParseOperations
         }
     }
 
-    static public ArrayList<GasDataPoint> parseGasData(String filePath)
+    static public ArrayList<GasDataPoint> parseGasData(String fileName)
     {
         ArrayList<GasDataPoint> data = new ArrayList<>();
+        File gasUsageFile = new File(System.getProperty("user.dir") + "/" + fileName);
+
+        if (gasUsageFile.exists())
+        {
+            Scanner csvReader = null;
+
+            try
+            {
+                csvReader = new Scanner(gasUsageFile);
+                data = getGasUsageSummary(csvReader);
+                printGasUsageSummary(dailyPowerUsage);
+                csvReader.close();
+            }
+            catch (FileNotFoundException e)
+            {
+                System.out.println("Cannot open that file.");
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+
         return data;
     }
 
-    private static void printGasUsageSummary(ArrayList<GasDataPoint> dailyPowerUsage)
+    private static void printGasUsageSummary(ArrayList<GasDataPoint> dailyGasUsage)
     {
-        for (GasDataPoint day : dailyPowerUsage)
+        for (GasDataPoint day : dailyGasUsage)
         {
-//            if (!day.getDate().equals("N/A"))
-//            {
-//                System.out.println(day.toString());
-//            }
+            if (!day.getDate().equals("N/A"))
+            {
+                System.out.println(day.toString());
+            }
         }
     }
+
+    private static ArrayList<GasDataPoint> getGasUsageSummary(Scanner fReader)
+    {
+        ArrayList<GasDataPoint> data = new ArrayList<>();
+        double lineUsageData = 0.0;
+        String lineDate = "N/A";
+
+        while (fReader.hasNextLine())
+        {
+            String[] inputDataLine = fReader.nextLine().split(",");
+
+            if (inputDataLine[0].equals("Natural gas usage"))
+            {
+                lineUsageData = Double.parseDouble(inputDataLine[4]);
+                lineDate = inputDataLine[2];
+                data.add(new GasDataPoint(lineDate, lineUsageData));
+            }
+        }
+
+        return data;
+    }
+
+//    private static void printGasUsageSummary(ArrayList<GasDataPoint> dailyPowerUsage)
+//    {
+//        for (GasDataPoint day : dailyPowerUsage)
+//        {
+//        }
+//    }
 
     static public ArrayList<TemperatureDataPoint> parseTemperatureData(String filePath)
     {
