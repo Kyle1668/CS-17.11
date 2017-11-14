@@ -14,16 +14,12 @@ public class CSVParseOperations
 {
     static public ArrayList<ElectricDataPoint> parseElectricData(String fileName)
     {
-        ArrayList<ElectricDataPoint> allElectricData = new ArrayList<ElectricDataPoint>();
-        ArrayList<ElectricDataPoint> hourlyElectricData = new ArrayList<ElectricDataPoint>();
+        ArrayList<ElectricDataPoint> dailyPowerUsage = new ArrayList<ElectricDataPoint>();
         File powerUsageFile = new File(System.getProperty("user.dir") + "/" + fileName);
-
-        String lastData = "";
 
         if (powerUsageFile.exists())
         {
             Scanner csvReader = null;
-            ArrayList<ElectricDataPoint> dailyPowerUsage = null;
 
             try
             {
@@ -39,7 +35,7 @@ public class CSVParseOperations
             }
         }
 
-        return allElectricData;
+        return dailyPowerUsage;
     }
 
     private static ArrayList<ElectricDataPoint> getElectricUsageSummary(Scanner fReader)
@@ -83,7 +79,7 @@ public class CSVParseOperations
         return dailyPowerUsage;
     }
 
-    private static void printElectricUsageSummary(ArrayList<ElectricDataPoint> dailyPowerUsage)
+    public static void printElectricUsageSummary(ArrayList<ElectricDataPoint> dailyPowerUsage)
     {
         for (ElectricDataPoint day : dailyPowerUsage)
         {
@@ -107,7 +103,7 @@ public class CSVParseOperations
             {
                 csvReader = new Scanner(gasUsageFile);
                 data = getGasUsageSummary(csvReader);
-                printGasUsageSummary(dailyPowerUsage);
+                printGasUsageSummary(data);
                 csvReader.close();
             }
             catch (FileNotFoundException e)
@@ -120,7 +116,7 @@ public class CSVParseOperations
         return data;
     }
 
-    private static void printGasUsageSummary(ArrayList<GasDataPoint> dailyGasUsage)
+    public static void printGasUsageSummary(ArrayList<GasDataPoint> dailyGasUsage)
     {
         for (GasDataPoint day : dailyGasUsage)
         {
@@ -143,31 +139,155 @@ public class CSVParseOperations
 
             if (inputDataLine[0].equals("Natural gas usage"))
             {
-                lineUsageData = Double.parseDouble(inputDataLine[4]);
-                lineDate = inputDataLine[2];
+                lineDate = inputDataLine[1];
+                lineUsageData = Double.parseDouble(inputDataLine[2]);
                 data.add(new GasDataPoint(lineDate, lineUsageData));
             }
+
         }
 
         return data;
     }
 
-//    private static void printGasUsageSummary(ArrayList<GasDataPoint> dailyPowerUsage)
-//    {
-//        for (GasDataPoint day : dailyPowerUsage)
-//        {
-//        }
-//    }
-
-    static public ArrayList<TemperatureDataPoint> parseTemperatureData(String filePath)
+    static public ArrayList<TemperatureDataPoint> parseTemperatureData(String fileName)
     {
         ArrayList<TemperatureDataPoint> data = new ArrayList<>();
+
+
+        Scanner csvReader = null;
+//        String fileName = getFileName();
+        File csvWeatherDataFile = new File(System.getProperty("user.dir") + "/" + fileName);
+
+        ArrayList<TemperatureDataPoint> allWeatherData = new ArrayList<>();
+        ArrayList<TemperatureDataPoint> hourlyWeatherData = new ArrayList<>();
+
+        if (csvWeatherDataFile.exists())
+        {
+            try
+            {
+                csvReader = new Scanner(csvWeatherDataFile);
+
+                while (csvReader.hasNextLine())
+                {
+                    String output = csvReader.nextLine();
+
+                    if (!output.equals("") && output.charAt(0) != '#')
+                    {
+                        TemperatureDataPoint newData = new TemperatureDataPoint(output);
+                        allWeatherData.add(newData);
+                    }
+
+                }
+
+                csvReader.close();
+
+                System.out.println("\n");
+
+                int numDataPointsRecentHour = 0;
+
+                // Iterate through all the data and get the average for each hour.
+                // Each hour and it's average temperature is stored in the "hourlyWeatherData" structure.
+
+                for (TemperatureDataPoint currentWeatherData : allWeatherData)
+                {
+                    String date = currentWeatherData.getDate().split(" ")[0];
+                    String hour = currentWeatherData.getDate().split(" ")[1].split(":")[0];
+                    String dateAndHour = date + " Hour: " + hour;
+
+                    numDataPointsRecentHour++;
+
+                    if (hourlyWeatherData.size() == 0)
+                    {
+                        TemperatureDataPoint newHourData = new TemperatureDataPoint(dateAndHour, currentWeatherData.getTemperature());
+                        hourlyWeatherData.add(newHourData);
+                    }
+                    else
+                    {
+                        int lastIndex = hourlyWeatherData.size() - 1;
+                        String lastDate = hourlyWeatherData.get(lastIndex).getDate();
+                        Float lastTemp = hourlyWeatherData.get(lastIndex).getTemperature();
+
+                        if (lastDate.equals(dateAndHour))
+                        {
+                            // If the hour has not changed, increment the total sum of temperatures.
+                            Float newTemperature = lastTemp + currentWeatherData.getTemperature();
+                            hourlyWeatherData.get(lastIndex).setTemperature(newTemperature);
+                        }
+                        else
+                        {
+                            // If the hour has changed, calculate the average temperature and assign that value.
+
+                            float averageTemp = hourlyWeatherData.get(lastIndex).getTemperature() / numDataPointsRecentHour;
+                            hourlyWeatherData.get(lastIndex).setTemperature(averageTemp);
+
+                            TemperatureDataPoint newHourData = new TemperatureDataPoint(dateAndHour, currentWeatherData.getTemperature());
+                            hourlyWeatherData.add(newHourData);
+
+                            numDataPointsRecentHour = 0;
+                        }
+
+                    }
+
+                }
+
+                // Determine and print the coldest hour from each day.
+
+                if (hourlyWeatherData.size() > 0)
+                {
+                    String coldestHourDate = hourlyWeatherData.get(0).getDate();
+                    Float coldestHourTemperature = hourlyWeatherData.get(0).getTemperature();
+
+                    for (TemperatureDataPoint hourData : hourlyWeatherData)
+                    {
+                        String currentDate = hourData.getDate();
+                        Float currentTemperature = hourData.getTemperature();
+                        boolean dayChanged = !hourData.getDate().split("/")[0].equals(coldestHourDate.split("/")[0]);
+
+                        if (dayChanged)
+                        {
+                            // Print the coldest hour from the previous day then set values to first data from new day.
+
+                            System.out.println(
+                                    coldestHourDate.split(" ")[0] + ": The coldest hour " +
+                                            "was hour " + coldestHourDate.split(" ")[2] +
+                                            " at " + String.format("%.2f", coldestHourTemperature)
+                                            + " degrees Fahrenheit"
+                            );
+
+                            coldestHourTemperature = currentTemperature;
+                            coldestHourDate = currentDate;
+                        }
+
+                        if (currentTemperature < coldestHourTemperature)
+                        {
+                            coldestHourTemperature = currentTemperature;
+                            coldestHourDate = currentDate;
+                        }
+
+                    }
+
+                }
+
+            }
+            catch (FileNotFoundException e)
+            {
+                System.out.println("Cannot open that file.");
+                System.out.println("Exception: " + e.getMessage());
+            }
+
+        }
+        else
+        {
+            System.out.println("That file doesn't exist. Try again");
+        }
+
+
         return data;
     }
 
-    private static void printTemperatureSummary(ArrayList<ElectricDataPoint> dailyPowerUsage)
+    public static void printTemperatureSummary(ArrayList<TemperatureDataPoint> dailyPowerUsage)
     {
-        for (ElectricDataPoint day : dailyPowerUsage)
+        for (TemperatureDataPoint day : dailyPowerUsage)
         {
             if (!day.getDate().equals("N/A"))
             {

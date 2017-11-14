@@ -5,12 +5,16 @@
  */
 package edu.srjc.A7.EnergyUsageUI;
 
+import edu.srjc.A7.EnergyUsageUI.Models.ElectricDataPoint;
+import edu.srjc.A7.EnergyUsageUI.Models.GasDataPoint;
+import edu.srjc.A7.EnergyUsageUI.Models.TemperatureDataPoint;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 
 
 public class UIViewController extends Application
@@ -50,8 +54,13 @@ public class UIViewController extends Application
         final String gasFile = "pge_gas_interval_data_2016-01-01_to_2016-03-01.csv";
         final String electricFile = "pge_electric_interval_data_2016-01-01_to_2016-02-28.csv";
 
-        CSVParseOperations.parseElectricData(electricFile);
+        ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
+        ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
+        ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(gasFile);
 
+        CSVParseOperations.printGasUsageSummary(dailyGasUsage);
+        CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);
+        CSVParseOperations.printTemperatureSummary(dailyTemperatureData);
 
     }
     

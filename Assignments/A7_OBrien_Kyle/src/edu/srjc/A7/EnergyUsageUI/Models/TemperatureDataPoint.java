@@ -5,10 +5,12 @@ import java.text.SimpleDateFormat;
 
 public class TemperatureDataPoint
 {
+    private float lowestTemperature = 0;
+    private float highestTemperature = 0;
     private float temperature = 0;
     private String date = "";
 
-    TemperatureDataPoint(String csvData)
+    public TemperatureDataPoint(String csvData)
     {
         // The passed in data is parsed. The epoc data is casted to day/month/year format.
 
