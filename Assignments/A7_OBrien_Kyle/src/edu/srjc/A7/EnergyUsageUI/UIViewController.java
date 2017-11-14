@@ -62,6 +62,7 @@ public class UIViewController extends Application
         CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);
         CSVParseOperations.printTemperatureSummary(dailyTemperatureData);
 
+
     }
     
 }
