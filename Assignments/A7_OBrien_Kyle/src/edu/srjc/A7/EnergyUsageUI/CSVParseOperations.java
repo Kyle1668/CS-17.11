@@ -178,8 +178,14 @@ public class CSVParseOperations
                             TemperatureDataPoint newData = new TemperatureDataPoint(output);
                             TemperatureDataPoint lastData = allWeatherData.get(allWeatherData.size() - 1);
 
-                            if (!newData.getDate().equals(lastData.getDate()))
+                            String lastDay = lastData.getDate().split(" ")[0];
+                            String currentDay = newData.getDate().split(" ")[0];
+
+                            if (!lastDay.equals(currentDay))
                             {
+                                System.out.println(lastData.getDate());
+                                System.out.println(newData.getDate());
+
                                 allWeatherData.add(newData);
 
                                 System.out.println("Outside: " + outTemp);
@@ -221,156 +227,6 @@ public class CSVParseOperations
         }
 
         return allWeatherData;
-    }
-
-// ----------------------------------------------------------------------------------------------------------
-
-    static public ArrayList<TemperatureDataPoint> oldparseTemperatureData(String fileName)
-    {
-        ArrayList<TemperatureDataPoint> data = new ArrayList<>();
-
-
-        Scanner csvReader = null;
-        File csvWeatherDataFile = new File(System.getProperty("user.dir") + "/" + fileName);
-
-        ArrayList<TemperatureDataPoint> allWeatherData = new ArrayList<>();
-        ArrayList<TemperatureDataPoint> hourlyWeatherData = new ArrayList<>();
-
-        if (csvWeatherDataFile.exists())
-        {
-            try
-            {
-                csvReader = new Scanner(csvWeatherDataFile);
-
-                while (csvReader.hasNextLine())
-                {
-                    String output = csvReader.nextLine();
-
-                    if (!output.equals("") && output.charAt(0) != '#')
-                    {
-                        TemperatureDataPoint newData = new TemperatureDataPoint(output);
-                        allWeatherData.add(newData);
-                    }
-
-                }
-
-                csvReader.close();
-
-                System.out.println("\n");
-
-                int numDataPointsRecentHour = 0;
-
-                // Iterate through all the data and get the average for each hour.
-                // Each hour and it's average temperature is stored in the "hourlyWeatherData" structure.
-
-                // StringBuilder date = new StringBuilder();
-                // StringBuilder hour = new StringBuilder();
-
-                for (TemperatureDataPoint currentWeatherData : allWeatherData)
-                {
-                    String date = "";
-                    String hour = "";
-
-                    if (currentWeatherData.getDate().split(" ").length > 0) {
-                        date = currentWeatherData.getDate().split(" ")[0];
-
-                        if (currentWeatherData.getDate().split(" ")[1].split(":").length > 1) {
-                            hour = currentWeatherData.getDate().split(" ")[1].split(":")[0];
-                        }
-
-                    }
-
-                    String dateAndHour = date + " Hour: " + hour;
-
-                    numDataPointsRecentHour++;
-
-                    if (hourlyWeatherData.size() == 0)
-                    {
-                        TemperatureDataPoint newHourData = new TemperatureDataPoint(dateAndHour, currentWeatherData.getTemperature());
-                        hourlyWeatherData.add(newHourData);
-                    }
-                    else
-                    {
-                        int lastIndex = hourlyWeatherData.size() - 1;
-                        String lastDate = hourlyWeatherData.get(lastIndex).getDate();
-                        Float lastTemp = hourlyWeatherData.get(lastIndex).getTemperature();
-
-                        if (lastDate.equals(dateAndHour))
-                        {
-                            // If the hour has not changed, increment the total sum of temperatures.
-                            Float newTemperature = lastTemp + currentWeatherData.getTemperature();
-                            hourlyWeatherData.get(lastIndex).setLowestTemperature(newTemperature);
-                        }
-                        else
-                        {
-                            // If the hour has changed, calculate the average temperature and assign that value.
-
-                            float averageTemp = hourlyWeatherData.get(lastIndex).getTemperature() / numDataPointsRecentHour;
-                            hourlyWeatherData.get(lastIndex).setLowestTemperature(averageTemp);
-
-                            TemperatureDataPoint newHourData = new TemperatureDataPoint(dateAndHour, currentWeatherData.getTemperature());
-                            hourlyWeatherData.add(newHourData);
-
-                            numDataPointsRecentHour = 0;
-                        }
-
-                    }
-
-                }
-
-                // Determine and print the coldest hour from each day.
-
-                if (hourlyWeatherData.size() > 0)
-                {
-                    String coldestHourDate = hourlyWeatherData.get(0).getDate();
-                    Float coldestHourTemperature = hourlyWeatherData.get(0).getTemperature();
-
-                    for (TemperatureDataPoint hourData : hourlyWeatherData)
-                    {
-                        String currentDate = hourData.getDate();
-                        Float currentTemperature = hourData.getTemperature();
-                        boolean dayChanged = !hourData.getDate().split("/")[0].equals(coldestHourDate.split("/")[0]);
-
-                        if (dayChanged)
-                        {
-                            // Print the coldest hour from the previous day then set values to first data from new day.
-                            data.add(new TemperatureDataPoint(coldestHourDate.split(" ")[0], coldestHourTemperature));
-
-//                            System.out.println(
-//                                    coldestHourDate.split(" ")[0] + ": The coldest hour " +
-//                                            "was hour " + coldestHourDate.split(" ")[2] +
-//                                            " at " + String.format("%.2f", coldestHourTemperature)
-//                                            + " degrees Fahrenheit"
-//                            );
-
-                            coldestHourTemperature = currentTemperature;
-                            coldestHourDate = currentDate;
-                        }
-
-                        if (currentTemperature < coldestHourTemperature)
-                        {
-                            coldestHourTemperature = currentTemperature;
-                            coldestHourDate = currentDate;
-                        }
-
-                    }
-
-                }
-
-            }
-            catch (FileNotFoundException e)
-            {
-                System.out.println("Cannot open that file.");
-                System.out.println("Exception: " + e.getMessage());
-            }
-
-        }
-        else
-        {
-            System.out.println("That file doesn't exist. Try again");
-        }
-
-        return data;
     }
 
     public static void printTemperatureSummary(ArrayList<TemperatureDataPoint> dailyPowerUsage)
