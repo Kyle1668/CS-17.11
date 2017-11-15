@@ -92,18 +92,18 @@ public class UIViewController extends Application
     }
 
     private static ArrayList<HomeDataPoint> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
-                                                        ArrayList<ElectricDataPoint> dailyPowerUsage,
+                                                        ArrayList<ElectricDataPoint> dailyElectricUsage,
                                                         ArrayList<TemperatureDataPoint> dailyTemperatureData)
     {
         ArrayList<HomeDataPoint> dailyHomeData = new ArrayList<>();
 
-        int upperBound = Math.min(dailyGasUsage.size(), Math.min(dailyPowerUsage.size(), dailyTemperatureData.size()));
+        int upperBound = Math.min(dailyGasUsage.size(), Math.min(dailyElectricUsage.size(), dailyTemperatureData.size()));
         int index = 0;
 
-        String date1 = dailyGasUsage.get(0).getDate();
-        String date2 = dailyPowerUsage.get(0).getDate();
-        String date3 = dailyTemperatureData.get(0).getDate();
-        String startDate = getCommonStartDate(date1, date2, date3);
+        String gasDate = dailyGasUsage.get(0).getDate();
+        String electricDate = dailyElectricUsage.get(0).getDate();
+        String temperatureDate = dailyTemperatureData.get(0).getDate();
+        String startDate = getCommonStartDate(gasDate, electricDate, temperatureDate);
 
         for (int i = 0; i < dailyGasUsage.size(); i++)
         {
@@ -118,11 +118,11 @@ public class UIViewController extends Application
             }
         }
 
-        for (int i = 0; i < dailyPowerUsage.size(); i++)
+        for (int i = 0; i < dailyElectricUsage.size(); i++)
         {
-            if (!dailyPowerUsage.get(i).getDate().equals(startDate))
+            if (!dailyElectricUsage.get(i).getDate().equals(startDate))
             {
-                dailyPowerUsage.remove(i);
+                dailyElectricUsage.remove(i);
                 i--;
             }
             else
@@ -146,18 +146,18 @@ public class UIViewController extends Application
 
         while (index < upperBound)
         {
-            date1 = dailyGasUsage.get(index).getDate();
-            date2 = dailyPowerUsage.get(index).getDate();
-            date3 = dailyTemperatureData.get(index).getDate();
+            gasDate = dailyGasUsage.get(index).getDate();
+            electricDate = dailyElectricUsage.get(index).getDate();
+            temperatureDate = dailyTemperatureData.get(index).getDate();
 
-            if (sameDate(date1, date2, date3))
+            if (sameDate(gasDate, electricDate, temperatureDate))
             {
                 float highestTemp = dailyTemperatureData.get(index).getHighestTemperature();
                 float lowestTemp = dailyTemperatureData.get(index).getLowestTemperature();
-                double electricUsage = dailyPowerUsage.get(index).getCumulativeUsage();
+                double electricUsage = dailyElectricUsage.get(index).getCumulativeUsage();
                 double gasUsage = dailyGasUsage.get(index).getUsage();
 
-                dailyHomeData.add(new HomeDataPoint(date1, lowestTemp, highestTemp, gasUsage, electricUsage));
+                dailyHomeData.add(new HomeDataPoint(gasDate, lowestTemp, highestTemp, gasUsage, electricUsage));
             }
 
             index++;
