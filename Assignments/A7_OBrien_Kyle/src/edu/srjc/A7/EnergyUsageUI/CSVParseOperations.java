@@ -169,12 +169,9 @@ public class CSVParseOperations
 
                     if (!output.equals("") && output.charAt(0) != '#' && output.split(",").length >= 7)
                     {
-                        System.out.println("output.split(\",\")[7]: " + output.split(",")[7]);
 
                         Float outTemp = Float.parseFloat(formatData(output.split(",")[7]));
                         Float inTemp = Float.parseFloat(formatData(output.split(",")[6]));
-
-
 
                         if (allWeatherData.size() != 0)
                         {
@@ -282,7 +279,6 @@ public class CSVParseOperations
                         }
 
                     }
-
 
                     String dateAndHour = date + " Hour: " + hour;
 
