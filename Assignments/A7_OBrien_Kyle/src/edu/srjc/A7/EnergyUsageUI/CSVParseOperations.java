@@ -266,6 +266,9 @@ public class CSVParseOperations
                 // Iterate through all the data and get the average for each hour.
                 // Each hour and it's average temperature is stored in the "hourlyWeatherData" structure.
 
+                // StringBuilder date = new StringBuilder();
+                // StringBuilder hour = new StringBuilder();
+
                 for (TemperatureDataPoint currentWeatherData : allWeatherData)
                 {
                     String date = "";
