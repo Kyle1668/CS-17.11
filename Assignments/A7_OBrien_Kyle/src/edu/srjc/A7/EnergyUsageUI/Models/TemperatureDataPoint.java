@@ -58,12 +58,41 @@ public class TemperatureDataPoint
         this.temperature = temperature;
     }
 
-    public String printData() {
+    public float getLowestTemperature()
+    {
+        return lowestTemperature;
+    }
+
+    public void setLowestTemperature(float lowestTemperature)
+    {
+        this.lowestTemperature = lowestTemperature;
+    }
+
+    public float getHighestTemperature()
+    {
+        return highestTemperature;
+    }
+
+    public void setHighestTemperature(float highestTemperature)
+    {
+        this.highestTemperature = highestTemperature;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TemperatureDataPoint{" +
+                "lowestTemperature=" + lowestTemperature +
+                ", highestTemperature=" + highestTemperature +
+                ", temperature=" + temperature +
+                ", date='" + date + '\'' +
+                '}';
+    }
+
+    public void printData() {
         System.out.println(
-                date + ": The coldest hour " +
-                        "was hour " + coldestHourDate.split(" ")[2] +
-                        " at " + String.format("%.2f", coldestHourTemperature)
-                        + " degrees Fahrenheit"
+                date + ": The coldest temperature was " + lowestTemperature + " degrees Fahrenheit "
+                + "and the highest was " + highestTemperature + " degrees Fahrenheit. "
         );
     }
 

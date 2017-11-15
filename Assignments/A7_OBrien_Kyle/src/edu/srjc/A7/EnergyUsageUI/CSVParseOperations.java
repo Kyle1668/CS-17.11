@@ -151,11 +151,67 @@ public class CSVParseOperations
 
     static public ArrayList<TemperatureDataPoint> parseTemperatureData(String fileName)
     {
+        Scanner csvReader = null;
+        File csvWeatherDataFile = new File(System.getProperty("user.dir") + "/" + fileName);
+
+        ArrayList<TemperatureDataPoint> allWeatherData = new ArrayList<>();
+
+        if (csvWeatherDataFile.exists())
+        {
+            try
+            {
+                csvReader = new Scanner(csvWeatherDataFile);
+                String output = "";
+
+                while (csvReader.hasNextLine())
+                {
+                    output = csvReader.nextLine();
+
+                    if (!output.equals("") && output.charAt(0) != '#')
+                    {
+                        TemperatureDataPoint newData = new TemperatureDataPoint(output);
+                        TemperatureDataPoint lastData = allWeatherData.get(allWeatherData.size() - 1);
+
+                        if (!newData.getDate().equals(lastData.getDate()))
+                        {
+                            allWeatherData.add(newData);
+
+                            String outTemp = output.split(",")[7];
+                            String inTemp = output.split(",")[6];
+
+                            System.out.println("Outside: " + outTemp);
+                            System.out.println("Inside: " + inTemp);
+                        }
+
+//                        newData.printData();
+                    }
+
+                }
+
+                csvReader.close();
+            }
+            catch (FileNotFoundException e)
+            {
+                System.out.println("Cannot open that file.");
+                System.out.println("Exception: " + e.getMessage());
+            }
+        }
+        else
+        {
+            System.out.println("That file doesn't exist. Try again");
+        }
+
+        return allWeatherData;
+    }
+
+// ----------------------------------------------------------------------------------------------------------
+
+    static public ArrayList<TemperatureDataPoint> oldparseTemperatureData(String fileName)
+    {
         ArrayList<TemperatureDataPoint> data = new ArrayList<>();
 
 
         Scanner csvReader = null;
-//        String fileName = getFileName();
         File csvWeatherDataFile = new File(System.getProperty("user.dir") + "/" + fileName);
 
         ArrayList<TemperatureDataPoint> allWeatherData = new ArrayList<>();
@@ -222,14 +278,14 @@ public class CSVParseOperations
                         {
                             // If the hour has not changed, increment the total sum of temperatures.
                             Float newTemperature = lastTemp + currentWeatherData.getTemperature();
-                            hourlyWeatherData.get(lastIndex).setTemperature(newTemperature);
+                            hourlyWeatherData.get(lastIndex).setLowestTemperature(newTemperature);
                         }
                         else
                         {
                             // If the hour has changed, calculate the average temperature and assign that value.
 
                             float averageTemp = hourlyWeatherData.get(lastIndex).getTemperature() / numDataPointsRecentHour;
-                            hourlyWeatherData.get(lastIndex).setTemperature(averageTemp);
+                            hourlyWeatherData.get(lastIndex).setLowestTemperature(averageTemp);
 
                             TemperatureDataPoint newHourData = new TemperatureDataPoint(dateAndHour, currentWeatherData.getTemperature());
                             hourlyWeatherData.add(newHourData);
@@ -300,10 +356,7 @@ public class CSVParseOperations
     {
         for (TemperatureDataPoint day : dailyPowerUsage)
         {
-            if (!day.getDate().equals("N/A"))
-            {
-                System.out.println(day.toString());
-            }
+            day.printData();
         }
     }
 

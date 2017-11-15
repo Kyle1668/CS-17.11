@@ -54,12 +54,12 @@ public class UIViewController extends Application
         final String gasFile = "pge_gas_interval_data_2016-01-01_to_2016-03-01.csv";
         final String electricFile = "pge_electric_interval_data_2016-01-01_to_2016-02-28.csv";
 
-        ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
-        ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
+//        ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
+//        ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
         ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(temperatureFile);
 
-        CSVParseOperations.printGasUsageSummary(dailyGasUsage);
-        CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);
+//        CSVParseOperations.printGasUsageSummary(dailyGasUsage);
+//        CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);
         CSVParseOperations.printTemperatureSummary(dailyTemperatureData);
 
 
