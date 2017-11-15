@@ -7,7 +7,6 @@ import edu.srjc.A7.EnergyUsageUI.Models.TemperatureDataPoint;
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.lang.StringBuilder;
 import java.io.FileNotFoundException;
 
 public class CSVParseOperations
@@ -170,8 +169,7 @@ public class CSVParseOperations
                     if (!output.equals("") && output.charAt(0) != '#' && output.split(",").length >= 7)
                     {
 
-                        Float outTemp = Float.parseFloat(formatData(output.split(",")[7]));
-                        Float inTemp = Float.parseFloat(formatData(output.split(",")[6]));
+                        Float outsideTemperature = Float.parseFloat(formatData(output.split(",")[7]));
 
                         if (allWeatherData.size() != 0)
                         {
@@ -181,26 +179,28 @@ public class CSVParseOperations
                             String lastDay = lastData.getDate().split(" ")[0];
                             String currentDay = newData.getDate().split(" ")[0];
 
-                            if (!lastDay.equals(currentDay))
+                            if (lastDay.equals(currentDay))
                             {
-                                System.out.println(lastData.getDate());
-                                System.out.println(newData.getDate());
-
-                                allWeatherData.add(newData);
-
-                                System.out.println("Outside: " + outTemp);
-                                System.out.println("Inside: " + inTemp);
+                                if (lastData.getLowestTemperature() != 0.0 && lastData.getHighestTemperature() != 0.0)
+                                {
+                                    if (outsideTemperature < lastData.getLowestTemperature())
+                                    {
+                                        lastData.setLowestTemperature(outsideTemperature);
+                                    }
+                                    else if (outsideTemperature > lastData.getHighestTemperature())
+                                    {
+                                        lastData.setHighestTemperature(outsideTemperature);
+                                    }
+                                }
+                                else
+                                {
+                                    lastData.setHighestTemperature(outsideTemperature);
+                                    lastData.setLowestTemperature(outsideTemperature);
+                                }
                             }
                             else
                             {
-                                if (outTemp < lastData.getLowestTemperature())
-                                {
-                                    lastData.setLowestTemperature(outTemp);
-                                }
-                                if (outTemp > lastData.getLowestTemperature())
-                                {
-                                    lastData.setLowestTemperature(outTemp);
-                                }
+                                allWeatherData.add(newData);
                             }
                         }
                         else
