@@ -56,7 +56,7 @@ public class UIViewController extends Application
 
         ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
         ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
-        ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(gasFile);
+        ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(temperatureFile);
 
         CSVParseOperations.printGasUsageSummary(dailyGasUsage);
         CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);

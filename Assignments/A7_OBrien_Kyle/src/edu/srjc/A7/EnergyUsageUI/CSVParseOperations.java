@@ -190,8 +190,19 @@ public class CSVParseOperations
 
                 for (TemperatureDataPoint currentWeatherData : allWeatherData)
                 {
-                    String date = currentWeatherData.getDate().split(" ")[0];
-                    String hour = currentWeatherData.getDate().split(" ")[1].split(":")[0];
+                    String date = "";
+                    String hour = "";
+
+                    if (currentWeatherData.getDate().split(" ").length > 0) {
+                        date = currentWeatherData.getDate().split(" ")[0];
+
+                        if (currentWeatherData.getDate().split(" ")[1].split(":").length > 1) {
+                            hour = currentWeatherData.getDate().split(" ")[1].split(":")[0];
+                        }
+
+                    }
+
+
                     String dateAndHour = date + " Hour: " + hour;
 
                     numDataPointsRecentHour++;
@@ -246,13 +257,14 @@ public class CSVParseOperations
                         if (dayChanged)
                         {
                             // Print the coldest hour from the previous day then set values to first data from new day.
+                            data.add(new TemperatureDataPoint(coldestHourDate.split(" ")[0], coldestHourTemperature));
 
-                            System.out.println(
-                                    coldestHourDate.split(" ")[0] + ": The coldest hour " +
-                                            "was hour " + coldestHourDate.split(" ")[2] +
-                                            " at " + String.format("%.2f", coldestHourTemperature)
-                                            + " degrees Fahrenheit"
-                            );
+//                            System.out.println(
+//                                    coldestHourDate.split(" ")[0] + ": The coldest hour " +
+//                                            "was hour " + coldestHourDate.split(" ")[2] +
+//                                            " at " + String.format("%.2f", coldestHourTemperature)
+//                                            + " degrees Fahrenheit"
+//                            );
 
                             coldestHourTemperature = currentTemperature;
                             coldestHourDate = currentDate;
@@ -280,7 +292,6 @@ public class CSVParseOperations
         {
             System.out.println("That file doesn't exist. Try again");
         }
-
 
         return data;
     }

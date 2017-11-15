@@ -58,4 +58,13 @@ public class TemperatureDataPoint
         this.temperature = temperature;
     }
 
+    public String printData() {
+        System.out.println(
+                date + ": The coldest hour " +
+                        "was hour " + coldestHourDate.split(" ")[2] +
+                        " at " + String.format("%.2f", coldestHourTemperature)
+                        + " degrees Fahrenheit"
+        );
+    }
+
 }
