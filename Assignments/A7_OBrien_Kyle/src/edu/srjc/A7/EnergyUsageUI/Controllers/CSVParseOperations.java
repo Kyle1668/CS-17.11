@@ -1,4 +1,4 @@
-package edu.srjc.A7.EnergyUsageUI;
+package edu.srjc.A7.EnergyUsageUI.Controllers;
 
 import edu.srjc.A7.EnergyUsageUI.Models.GasDataPoint;
 import edu.srjc.A7.EnergyUsageUI.Models.ElectricDataPoint;
@@ -24,7 +24,7 @@ public class CSVParseOperations
             {
                 csvReader = new Scanner(powerUsageFile);
                 dailyPowerUsage = getElectricUsageSummary(csvReader);
-                printElectricUsageSummary(dailyPowerUsage);
+//                printElectricUsageSummary(dailyPowerUsage);
                 csvReader.close();
             }
             catch (FileNotFoundException e)
@@ -75,6 +75,8 @@ public class CSVParseOperations
 
         }
 
+        dailyPowerUsage.remove(0);
+
         return dailyPowerUsage;
     }
 
@@ -102,7 +104,7 @@ public class CSVParseOperations
             {
                 csvReader = new Scanner(gasUsageFile);
                 data = getGasUsageSummary(csvReader);
-                printGasUsageSummary(data);
+//                printGasUsageSummary(data);
                 csvReader.close();
             }
             catch (FileNotFoundException e)
@@ -113,17 +115,6 @@ public class CSVParseOperations
         }
 
         return data;
-    }
-
-    public static void printGasUsageSummary(ArrayList<GasDataPoint> dailyGasUsage)
-    {
-        for (GasDataPoint day : dailyGasUsage)
-        {
-            if (!day.getDate().equals("N/A"))
-            {
-                System.out.println(day.toString());
-            }
-        }
     }
 
     private static ArrayList<GasDataPoint> getGasUsageSummary(Scanner fReader)
@@ -146,6 +137,17 @@ public class CSVParseOperations
         }
 
         return data;
+    }
+
+    public static void printGasUsageSummary(ArrayList<GasDataPoint> dailyGasUsage)
+    {
+        for (GasDataPoint day : dailyGasUsage)
+        {
+            if (!day.getDate().equals("N/A"))
+            {
+                System.out.println(day.toString());
+            }
+        }
     }
 
     static public ArrayList<TemperatureDataPoint> parseTemperatureData(String fileName)
@@ -237,7 +239,7 @@ public class CSVParseOperations
         }
     }
 
-    private static String formatData(String arg)
+    public static String formatData(String arg)
     {
         // Removes extra quotations from csv data to avoid type casting errors.
         return !arg.equals("") ? arg.substring(1, arg.length() - 1) : arg;

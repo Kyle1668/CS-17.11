@@ -2,21 +2,24 @@ package edu.srjc.A7.EnergyUsageUI.Models;
 
 public class HomeDataPoint
 {
+
     private String data = "";
-    private String cumulativeGasData = "";
-    private String cumulativeElectricData = "";
-    private String cumulativeWeatherData = "";
+    private float lowestTemperature = 0;
+    private float highestTemperature = 0;
+    private double cumulativeGasUsage = 0.0;
+    private double cumulativeElectricUsage = 0.0;
 
     public HomeDataPoint()
     {
     }
 
-    public HomeDataPoint(String data, String cumulativeGasData, String cumulativeElectricData, String cumulativeWeatherData)
+    public HomeDataPoint(String data, float lowestTemperature, float highestTemperature, double cumulativeGasUsage, double cumulativeElectricUsage)
     {
         this.data = data;
-        this.cumulativeGasData = cumulativeGasData;
-        this.cumulativeElectricData = cumulativeElectricData;
-        this.cumulativeWeatherData = cumulativeWeatherData;
+        this.lowestTemperature = lowestTemperature;
+        this.highestTemperature = highestTemperature;
+        this.cumulativeGasUsage = cumulativeGasUsage;
+        this.cumulativeElectricUsage = cumulativeElectricUsage;
     }
 
     public String getData()
@@ -29,34 +32,44 @@ public class HomeDataPoint
         this.data = data;
     }
 
-    public String getCumulativeGasData()
+    public float getLowestTemperature()
     {
-        return cumulativeGasData;
+        return lowestTemperature;
     }
 
-    public void setCumulativeGasData(String cumulativeGasData)
+    public void setLowestTemperature(float lowestTemperature)
     {
-        this.cumulativeGasData = cumulativeGasData;
+        this.lowestTemperature = lowestTemperature;
     }
 
-    public String getCumulativeElectricData()
+    public float getHighestTemperature()
     {
-        return cumulativeElectricData;
+        return highestTemperature;
     }
 
-    public void setCumulativeElectricData(String cumulativeElectricData)
+    public void setHighestTemperature(float highestTemperature)
     {
-        this.cumulativeElectricData = cumulativeElectricData;
+        this.highestTemperature = highestTemperature;
     }
 
-    public String getCumulativeWeatherData()
+    public double getCumulativeGasUsage()
     {
-        return cumulativeWeatherData;
+        return cumulativeGasUsage;
     }
 
-    public void setCumulativeWeatherData(String cumulativeWeatherData)
+    public void setCumulativeGasUsage(double cumulativeGasUsage)
     {
-        this.cumulativeWeatherData = cumulativeWeatherData;
+        this.cumulativeGasUsage = cumulativeGasUsage;
+    }
+
+    public double getCumulativeElectricUsage()
+    {
+        return cumulativeElectricUsage;
+    }
+
+    public void setCumulativeElectricUsage(double cumulativeElectricUsage)
+    {
+        this.cumulativeElectricUsage = cumulativeElectricUsage;
     }
 
     @Override
@@ -64,9 +77,10 @@ public class HomeDataPoint
     {
         return "HomeDataPoint{" +
                 "data='" + data + '\'' +
-                ", cumulativeGasData='" + cumulativeGasData + '\'' +
-                ", cumulativeElectricData='" + cumulativeElectricData + '\'' +
-                ", cumulativeWeatherData='" + cumulativeWeatherData + '\'' +
+                ", lowestTemperature='" + lowestTemperature + '\'' +
+                ", highestTemperature='" + highestTemperature + '\'' +
+                ", cumulativeGasUsage='" + cumulativeGasUsage + '\'' +
+                ", cumulativeElectricUsage='" + cumulativeElectricUsage + '\'' +
                 '}';
     }
 
