@@ -60,7 +60,7 @@ public class UIViewController extends Application
 
 //        CSVParseOperations.printGasUsageSummary(dailyGasUsage);
 //        CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);
-        CSVParseOperations.printTemperatureSummary(dailyTemperatureData);
+//        CSVParseOperations.printTemperatureSummary(dailyTemperatureData);
 
 
     }

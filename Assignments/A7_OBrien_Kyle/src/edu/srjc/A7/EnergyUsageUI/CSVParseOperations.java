@@ -167,23 +167,45 @@ public class CSVParseOperations
                 {
                     output = csvReader.nextLine();
 
-                    if (!output.equals("") && output.charAt(0) != '#')
+                    if (!output.equals("") && output.charAt(0) != '#' && output.split(",").length >= 7)
                     {
-                        TemperatureDataPoint newData = new TemperatureDataPoint(output);
-                        TemperatureDataPoint lastData = allWeatherData.get(allWeatherData.size() - 1);
+                        System.out.println("output.split(\",\")[7]: " + output.split(",")[7]);
 
-                        if (!newData.getDate().equals(lastData.getDate()))
+                        Float outTemp = Float.parseFloat(formatData(output.split(",")[7]));
+                        Float inTemp = Float.parseFloat(formatData(output.split(",")[6]));
+
+
+
+                        if (allWeatherData.size() != 0)
                         {
-                            allWeatherData.add(newData);
+                            TemperatureDataPoint newData = new TemperatureDataPoint(output);
+                            TemperatureDataPoint lastData = allWeatherData.get(allWeatherData.size() - 1);
 
-                            String outTemp = output.split(",")[7];
-                            String inTemp = output.split(",")[6];
+                            if (!newData.getDate().equals(lastData.getDate()))
+                            {
+                                allWeatherData.add(newData);
 
-                            System.out.println("Outside: " + outTemp);
-                            System.out.println("Inside: " + inTemp);
+                                System.out.println("Outside: " + outTemp);
+                                System.out.println("Inside: " + inTemp);
+                            }
+                            else
+                            {
+                                if (outTemp < lastData.getLowestTemperature())
+                                {
+                                    lastData.setLowestTemperature(outTemp);
+                                }
+                                if (outTemp > lastData.getLowestTemperature())
+                                {
+                                    lastData.setLowestTemperature(outTemp);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            TemperatureDataPoint newDataPoint = new TemperatureDataPoint(output);
+                            allWeatherData.add(newDataPoint);
                         }
 
-//                        newData.printData();
                     }
 
                 }
@@ -358,6 +380,12 @@ public class CSVParseOperations
         {
             day.printData();
         }
+    }
+
+    private static String formatData(String arg)
+    {
+        // Removes extra quotations from csv data to avoid type casting errors.
+        return !arg.equals("") ? arg.substring(1, arg.length() - 1) : arg;
     }
 
 }
