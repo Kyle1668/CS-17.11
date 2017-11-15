@@ -16,7 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,8 +45,6 @@ public class UIViewController extends Application
     {
         System.out.println("Program Start");
 
-
-
         app();
 //        launch(args);
         System.out.println("Program End");
@@ -59,15 +56,7 @@ public class UIViewController extends Application
         ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
         ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(temperatureFile);
 
-//        CSVParseOperations.printGasUsageSummary(dailyGasUsage);
-//        CSVParseOperations.printElectricUsageSummary(dailyPowerUsage);
-//        CSVParseOperations.printTemperatureSummary(dailyTemperatureData);
-
         ArrayList<HomeDataPoint> dailyHomeData = getHomeData(dailyGasUsage, dailyPowerUsage, dailyTemperatureData);
-
-//        System.out.println("dailyGasUsage.size: " + dailyGasUsage.size());
-//        System.out.println("dailyPowerUsage.size: " + dailyPowerUsage.size());
-//        System.out.println("dailyTemperatureData.size: " + dailyTemperatureData.size());
 
         for (HomeDataPoint day : dailyHomeData)
         {
@@ -76,7 +65,6 @@ public class UIViewController extends Application
             System.out.println("---------------------------");
         }
 
-
     }
 
     private static boolean sameDate(String date1, String date2, String date3)
@@ -84,25 +72,23 @@ public class UIViewController extends Application
         return date1.equals(date2) && date2.equals(date3);
     }
 
-    private static String latestStartDate(String date1, String date2, String date3)
+    private static String getCommonStartDate(String date1, String date2, String date3)
     {
         String latestDate = "";
+
         try {
-            Long epocDate1 = new SimpleDateFormat("yyyy/MM/dd").parse(date1).getTime();
-            Long epocDate2 = new SimpleDateFormat("yyyy/MM/dd").parse(date2).getTime();
-            Long epocDate3 = new SimpleDateFormat("yyyy/MM/dd").parse(date3).getTime();
-            Long largestEpocTime = Math.max(epocDate1, Math.max(epocDate2, epocDate3);
+            Long epocDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1).getTime();
+            Long epocDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(date2).getTime();
+            Long epocDate3 = new SimpleDateFormat("yyyy-MM-dd").parse(date3).getTime();
+            Long largestEpocTime = Math.max(epocDate1, Math.max(epocDate2, epocDate3));
 
-
-            latestDate = new SimpleDateFormat("yyyy/MM/dd k:m:s").format(largestEpocTime));
-
-
+            latestDate = new SimpleDateFormat("yyyy-MM-dd").format(largestEpocTime);
+            System.out.print("latestDate: " + latestDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         return latestDate;
-
     }
 
     private static ArrayList<HomeDataPoint> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
@@ -112,31 +98,57 @@ public class UIViewController extends Application
         ArrayList<HomeDataPoint> dailyHomeData = new ArrayList<>();
 
         int upperBound = Math.min(dailyGasUsage.size(), Math.min(dailyPowerUsage.size(), dailyTemperatureData.size()));
-        boolean sameDate = true;
         int index = 0;
 
-//        int gasMonth = Integer.parseInt(CSVParseOperations.formatData(dailyGasUsage.get(index).getDate().split("-")[1]));
-//        int electricMonth = Integer.parseInt(CSVParseOperations.formatData(dailyPowerUsage.get(index).getDate().split("-")[1]));
-//        int temperatureMonth = Integer.parseInt(CSVParseOperations.formatData(dailyTemperatureData.get(index).getDate().split("-")[1]));
-//
-//        if (gasMonth == electricMonth && electricMonth == temperatureMonth)
-//        {
-//            int gasDay = Integer.parseInt(dailyGasUsage.get(index).getDate().split("-")[2]);
-//            int electricDay = Integer.parseInt(dailyPowerUsage.get(index).getDate().split("-")[2]);
-//            int temperatureDay = Integer.parseInt(dailyTemperatureData.get(index).getDate().split("-")[2]);
-//
-//            int highestDay = Math.max(gasDay, Math.max(electricDay, temperatureDay));
-//
-//            int i = 0;
-//
-//        }
+        String date1 = dailyGasUsage.get(0).getDate();
+        String date2 = dailyPowerUsage.get(0).getDate();
+        String date3 = dailyTemperatureData.get(0).getDate();
+        String startDate = getCommonStartDate(date1, date2, date3);
+
+        for (int i = 0; i < dailyGasUsage.size(); i++)
+        {
+            if (!dailyGasUsage.get(i).getDate().equals(startDate))
+            {
+                dailyGasUsage.remove(i);
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        for (int i = 0; i < dailyPowerUsage.size(); i++)
+        {
+            if (!dailyPowerUsage.get(i).getDate().equals(startDate))
+            {
+                dailyPowerUsage.remove(i);
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        for (int i = 0; i < dailyTemperatureData.size(); i++)
+        {
+            if (!dailyTemperatureData.get(i).getDate().equals(startDate))
+            {
+                dailyTemperatureData.remove(i);
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
 
         while (index < upperBound)
         {
-
-            String date1 = dailyGasUsage.get(index).getDate();
-            String date2 = dailyPowerUsage.get(index).getDate();
-            String date3 = dailyTemperatureData.get(index).getDate();
+            date1 = dailyGasUsage.get(index).getDate();
+            date2 = dailyPowerUsage.get(index).getDate();
+            date3 = dailyTemperatureData.get(index).getDate();
 
             if (sameDate(date1, date2, date3))
             {
@@ -146,15 +158,9 @@ public class UIViewController extends Application
                 double gasUsage = dailyGasUsage.get(index).getUsage();
 
                 dailyHomeData.add(new HomeDataPoint(date1, lowestTemp, highestTemp, gasUsage, electricUsage));
-
-            }
-            else
-            {
-                index++;
             }
 
             index++;
-
         }
 
         return dailyHomeData;

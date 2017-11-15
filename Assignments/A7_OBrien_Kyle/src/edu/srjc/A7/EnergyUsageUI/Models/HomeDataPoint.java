@@ -9,10 +9,6 @@ public class HomeDataPoint
     private double cumulativeGasUsage = 0.0;
     private double cumulativeElectricUsage = 0.0;
 
-    public HomeDataPoint()
-    {
-    }
-
     public HomeDataPoint(String data, float lowestTemperature, float highestTemperature, double cumulativeGasUsage, double cumulativeElectricUsage)
     {
         this.data = data;

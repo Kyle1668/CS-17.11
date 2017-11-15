@@ -22,6 +22,7 @@ public class TemperatureDataPoint
 
 //            date = new SimpleDateFormat("dd/MM/yyyy k:m:s").format(d).split(" ")[0];
             date = new SimpleDateFormat("yyyy/MM/dd k:m:s").format(d).split(" ")[0];
+            date = date.split("/")[0] + "-" + date.split("/")[1] + "-" + date.split("/")[2];
             temperature = java.lang.Float.parseFloat(formatData(data[7]));
         }
 
