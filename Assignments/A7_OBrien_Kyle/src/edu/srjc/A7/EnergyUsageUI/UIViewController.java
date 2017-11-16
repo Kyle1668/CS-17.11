@@ -43,11 +43,8 @@ public class UIViewController extends Application
      */
     public static void main(String[] args)
     {
-        System.out.println("Program Start");
-
         app();
-//        launch(args);
-        System.out.println("Program End");
+        launch(args);
     }
 
     private static void app() {
