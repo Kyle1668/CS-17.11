@@ -31,9 +31,9 @@ public class UIViewController extends Application
     public void start(Stage stage) throws Exception
     {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.show();
     }
@@ -57,10 +57,10 @@ public class UIViewController extends Application
 
         for (HomeDataPoint day : dailyHomeData)
         {
-            System.out.println("---------------------------");
             System.out.println(day.toString());
-            System.out.println("---------------------------");
         }
+
+        ArrayList<ArrayList<HomeDataPoint>> monthlyHomeData = new ArrayList<>();
 
     }
 
@@ -74,9 +74,12 @@ public class UIViewController extends Application
         String latestDate = "";
 
         try {
+            // Converts String date to epoc.
             Long epocDate1 = new SimpleDateFormat("yyyy-MM-dd").parse(date1).getTime();
             Long epocDate2 = new SimpleDateFormat("yyyy-MM-dd").parse(date2).getTime();
             Long epocDate3 = new SimpleDateFormat("yyyy-MM-dd").parse(date3).getTime();
+
+            // Finds largest epoc time.
             Long largestEpocTime = Math.max(epocDate1, Math.max(epocDate2, epocDate3));
 
             latestDate = new SimpleDateFormat("yyyy-MM-dd").format(largestEpocTime);
@@ -88,11 +91,11 @@ public class UIViewController extends Application
         return latestDate;
     }
 
-    private static ArrayList<HomeDataPoint> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
+    private static ArrayList<ArrayList<HomeDataPoint>> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
                                                         ArrayList<ElectricDataPoint> dailyElectricUsage,
                                                         ArrayList<TemperatureDataPoint> dailyTemperatureData)
     {
-        ArrayList<HomeDataPoint> dailyHomeData = new ArrayList<>();
+        ArrayList<ArrayList<HomeDataPoint>> dailyHomeData = new ArrayList<>();
 
         int upperBound = Math.min(dailyGasUsage.size(), Math.min(dailyElectricUsage.size(), dailyTemperatureData.size()));
         int index = 0;

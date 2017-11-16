@@ -20,7 +20,6 @@ public class TemperatureDataPoint
             long epoc = Long.parseLong(formatData(data[0]));
             Date d = new Date(epoc * 1000);
 
-//            date = new SimpleDateFormat("dd/MM/yyyy k:m:s").format(d).split(" ")[0];
             date = new SimpleDateFormat("yyyy/MM/dd k:m:s").format(d).split(" ")[0];
             date = date.split("/")[0] + "-" + date.split("/")[1] + "-" + date.split("/")[2];
             temperature = java.lang.Float.parseFloat(formatData(data[7]));
