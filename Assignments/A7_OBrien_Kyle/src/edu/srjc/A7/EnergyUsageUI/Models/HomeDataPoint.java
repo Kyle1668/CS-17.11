@@ -3,29 +3,29 @@ package edu.srjc.A7.EnergyUsageUI.Models;
 public class HomeDataPoint
 {
 
-    private String data = "";
+    private String date = "";
     private float lowestTemperature = 0;
     private float highestTemperature = 0;
     private double cumulativeGasUsage = 0.0;
     private double cumulativeElectricUsage = 0.0;
 
-    public HomeDataPoint(String data, float lowestTemperature, float highestTemperature, double cumulativeGasUsage, double cumulativeElectricUsage)
+    public HomeDataPoint(String date, float lowestTemperature, float highestTemperature, double cumulativeGasUsage, double cumulativeElectricUsage)
     {
-        this.data = data;
+        this.date = date;
         this.lowestTemperature = lowestTemperature;
         this.highestTemperature = highestTemperature;
         this.cumulativeGasUsage = cumulativeGasUsage;
         this.cumulativeElectricUsage = cumulativeElectricUsage;
     }
 
-    public String getData()
+    public String getDate()
     {
-        return data;
+        return date;
     }
 
-    public void setData(String data)
+    public void setDate(String date)
     {
-        this.data = data;
+        this.date = date;
     }
 
     public float getLowestTemperature()
@@ -72,7 +72,7 @@ public class HomeDataPoint
     public String toString()
     {
         return "HomeDataPoint{" +
-                "data='" + data + '\'' +
+                "date='" + date + '\'' +
                 ", lowestTemperature='" + lowestTemperature + '\'' +
                 ", highestTemperature='" + highestTemperature + '\'' +
                 ", cumulativeGasUsage='" + cumulativeGasUsage + '\'' +

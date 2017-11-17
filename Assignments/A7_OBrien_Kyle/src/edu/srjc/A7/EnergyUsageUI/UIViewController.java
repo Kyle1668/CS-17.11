@@ -11,14 +11,24 @@ import edu.srjc.A7.EnergyUsageUI.Models.GasDataPoint;
 import edu.srjc.A7.EnergyUsageUI.Models.HomeDataPoint;
 import edu.srjc.A7.EnergyUsageUI.Models.TemperatureDataPoint;
 import javafx.application.Application;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 public class UIViewController extends Application
 {
@@ -26,7 +36,64 @@ public class UIViewController extends Application
     public static final String temperatureFile = "KCASONOM43.csv";
     public static final String gasFile = "pge_gas_interval_data_2016-01-01_to_2016-03-01.csv";
     public static final String electricFile = "pge_electric_interval_data_2016-01-01_to_2016-02-28.csv";
-    
+
+    @FXML
+    private static LineChart<String, Number> dataVisualizationChart;
+
+    private static void initVisualization()
+    {
+        ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
+        ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
+        ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(temperatureFile);
+        ArrayList<HomeDataPoint> dailyHomeData = getHomeData(dailyGasUsage, dailyPowerUsage, dailyTemperatureData);
+
+        XYChart.Series electricUsageSeries = new XYChart.Series();
+        XYChart.Series naturalGasUsageSeries = new XYChart.Series();
+        XYChart.Series lowestTemperatureSeries = new XYChart.Series();
+        XYChart.Series highestTemperatureSeries = new XYChart.Series();
+
+        electricUsageSeries.setName("Electric");
+        naturalGasUsageSeries.setName("Gas");
+        lowestTemperatureSeries.setName("Lowest Temperature");
+        highestTemperatureSeries.setName("Highest Temperature");
+
+        for (HomeDataPoint homeData : dailyHomeData)
+        {
+
+            String gasLabel = "gasLabel";
+            String electricLabel = "electricLabel";
+            String lowestTempLabel = "lowestTempLabel";
+            String highestTempLabel = "highestTempLabel";
+
+//            String labelData = String.format("Date: %s\nSyst: %s\nDias: %s\nPulse: %s\n",
+//                    r.getDate(), r.getSystolic(), r.getDiastolic(), r.getHeartRate());
+
+            String currentDate = homeData.getDate();
+
+            XYChart.Data<String, Double> gasVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getCumulativeGasUsage());
+            XYChart.Data<String, Double> electricVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getCumulativeElectricUsage());
+            XYChart.Data<String, Float> lowestTempVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getLowestTemperature());
+            XYChart.Data<String, Float> highestTempVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getHighestTemperature());
+
+            naturalGasUsageSeries.setNode(new DataPopup(gasLabel));
+            electricUsageSeries.setNode(new DataPopup(electricLabel));
+            lowestTemperatureSeries.setNode(new DataPopup(lowestTempLabel));
+            highestTemperatureSeries.setNode(new DataPopup(highestTempLabel));
+
+            naturalGasUsageSeries.getData().add(gasVisualizationDataPoint);
+            electricUsageSeries.getData().add(electricVisualizationDataPoint);
+            lowestTemperatureSeries.getData().add(lowestTempVisualizationDataPoint);
+            highestTemperatureSeries.getData().add(highestTempVisualizationDataPoint);
+
+        }
+
+        dataVisualizationChart.getData().add(naturalGasUsageSeries);
+        dataVisualizationChart.getData().add(electricUsageSeries);
+        dataVisualizationChart.getData().add(lowestTemperatureSeries);
+        dataVisualizationChart.getData().add(highestTemperatureSeries);
+
+    }
+
     @Override
     public void start(Stage stage) throws Exception
     {
@@ -43,24 +110,14 @@ public class UIViewController extends Application
      */
     public static void main(String[] args)
     {
-        app();
+//
+        initVisualization();
         launch(args);
     }
 
     private static void app() {
 
-        ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
-        ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
-        ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(temperatureFile);
 
-        ArrayList<HomeDataPoint> dailyHomeData = getHomeData(dailyGasUsage, dailyPowerUsage, dailyTemperatureData);
-
-        for (HomeDataPoint day : dailyHomeData)
-        {
-            System.out.println(day.toString());
-        }
-
-        ArrayList<ArrayList<HomeDataPoint>> monthlyHomeData = new ArrayList<>();
 
     }
 
@@ -91,11 +148,11 @@ public class UIViewController extends Application
         return latestDate;
     }
 
-    private static ArrayList<ArrayList<HomeDataPoint>> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
+    private static ArrayList<HomeDataPoint> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
                                                         ArrayList<ElectricDataPoint> dailyElectricUsage,
                                                         ArrayList<TemperatureDataPoint> dailyTemperatureData)
     {
-        ArrayList<ArrayList<HomeDataPoint>> dailyHomeData = new ArrayList<>();
+        ArrayList<HomeDataPoint> dailyHomeData = new ArrayList<>();
 
         int upperBound = Math.min(dailyGasUsage.size(), Math.min(dailyElectricUsage.size(), dailyTemperatureData.size()));
         int index = 0;
@@ -164,6 +221,44 @@ public class UIViewController extends Application
         }
 
         return dailyHomeData;
+    }
+
+    static class DataPopup extends StackPane
+    {
+        public DataPopup(String content)
+        {
+            setPrefSize(10,10);
+            Label lblContent = createBpDataLabel(content);
+
+            setOnMouseEntered(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    getChildren().setAll(lblContent);
+                    setCursor(Cursor.NONE);
+                    toFront();
+                }
+            });
+            setOnMouseExited(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    getChildren().clear();
+                }
+            });
+        }
+
+        private Label createBpDataLabel(String content)
+        {
+            Label label = new Label(content);
+            label.getStyleClass().addAll("default-color0", "chart-line-symbol", "chart-series-line");
+            label.setStyle("-fx-font-size: 12px; -fx-font-weight: bold");
+            label.setTextFill(Color.FIREBRICK);
+            label.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
+            return label;
+        }
     }
     
 }

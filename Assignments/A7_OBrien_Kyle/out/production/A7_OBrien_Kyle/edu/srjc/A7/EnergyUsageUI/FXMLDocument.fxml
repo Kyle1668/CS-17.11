@@ -8,20 +8,19 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.srjc.beanie.BloodPressure.BpUiController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.srjc.beanie.BloodPressure.BpUiController">
     <children>
         <MenuBar>
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem fx:id="mnuFileOpen" mnemonicParsing="false" onAction="#mnuFileOpen_Click" text="Open" />
-                        <MenuItem fx:id="mnuFileExit" mnemonicParsing="false" onAction="#mnuFileExit_Click" text="Exit" />
+                        <MenuItem fx:id="mnuFileOpen" mnemonicParsing="false" text="Open" />
+                        <MenuItem fx:id="mnuFileExit" mnemonicParsing="false" text="Exit" />
                     </items>
                 </Menu>
             </menus>
         </MenuBar>
-        <LineChart fx:id="bpChart" prefHeight="520.0" prefWidth="600.0" title="Blood Pressure">
+        <LineChart fx:id="dataVisualizationChart" prefHeight="520.0" prefWidth="600.0" title="Blood Pressure">
             <xAxis>
                 <CategoryAxis side="BOTTOM" />
             </xAxis>
