@@ -4,11 +4,8 @@ import edu.srjc.A7.EnergyUsageUI.Models.*;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
-import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,15 +15,9 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.stage.FileChooser;
-
-import javax.swing.*;
 
 /**
  *
@@ -36,20 +27,38 @@ public class FXMLDocumentController implements Initializable
 {
 
     @FXML
-    private MenuItem mnuFileOpen;
-    @FXML
-    private MenuItem mnuFileExit;
-
-    @FXML static private LineChart<String, Number> dataVisualizationChart;
-    private CategoryAxis dateAxis = new CategoryAxis();
-    private NumberAxis valueAxis = new NumberAxis();
+    private LineChart<String, Number> dataVisualizationChart;
 
     public static final String temperatureFile = "KCASONOM43.csv";
     public static final String gasFile = "pge_gas_interval_data_2016-01-01_to_2016-03-01.csv";
     public static final String electricFile = "pge_electric_interval_data_2016-01-01_to_2016-02-28.csv";
 
-    private static void initVisualization()
+    @FXML
+    public void initJanuaryVisualization()
     {
+        if (dataVisualizationChart.getData() != null)
+        {
+            dataVisualizationChart.getData().clear();
+        }
+        dataVisualizationChart.setTitle("Home Data: January");
+        initVisualization("01");
+
+    }
+
+    @FXML
+    public void initFebruaryVisualization()
+    {
+        if (dataVisualizationChart.getData() != null)
+        {
+            dataVisualizationChart.getData().clear();
+        }
+        dataVisualizationChart.setTitle("Home Data: February");
+        initVisualization("02");
+    }
+
+    private void initVisualization(String targetMonth)
+    {
+        // Parse CSV files and init array lists.
         ArrayList<GasDataPoint> dailyGasUsage = CSVParseOperations.parseGasData(gasFile);
         ArrayList<ElectricDataPoint> dailyPowerUsage = CSVParseOperations.parseElectricData(electricFile);
         ArrayList<TemperatureDataPoint> dailyTemperatureData = CSVParseOperations.parseTemperatureData(temperatureFile);
@@ -60,38 +69,39 @@ public class FXMLDocumentController implements Initializable
         XYChart.Series lowestTemperatureSeries = new XYChart.Series();
         XYChart.Series highestTemperatureSeries = new XYChart.Series();
 
-        electricUsageSeries.setName("Electric");
         naturalGasUsageSeries.setName("Gas");
+        electricUsageSeries.setName("Electric");
         lowestTemperatureSeries.setName("Lowest Temperature");
         highestTemperatureSeries.setName("Highest Temperature");
 
         for (HomeDataPoint homeData : dailyHomeData)
         {
+            String currentMonth = homeData.getDate().split("-")[1];
 
-            String gasLabel = "gasLabel";
-            String electricLabel = "electricLabel";
-            String lowestTempLabel = "lowestTempLabel";
-            String highestTempLabel = "highestTempLabel";
+            if (currentMonth.equals(targetMonth))
+            {
+                String gasLabel = String.format("Date: %s\nGas: %s\n", homeData.getDate(), homeData.getCumulativeGasUsage());
+                String electricLabel = String.format("Date: %s\nGas: %s\n", homeData.getDate(), homeData.getCumulativeElectricUsage());
+                String lowestTempLabel = String.format("Date: %s\nGas: %s\n", homeData.getDate(), homeData.getLowestTemperature());
+                String highestTempLabel = String.format("Date: %s\nGas: %s\n", homeData.getDate(), homeData.getHighestTemperature());
 
-//            String labelData = String.format("Date: %s\nSyst: %s\nDias: %s\nPulse: %s\n",
-//                    r.getDate(), r.getSystolic(), r.getDiastolic(), r.getHeartRate());
+                String currentDate = homeData.getDate();
 
-            String currentDate = homeData.getDate();
+                XYChart.Data<String, Double> gasVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getCumulativeGasUsage());
+                XYChart.Data<String, Double> electricVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getCumulativeElectricUsage());
+                XYChart.Data<String, Float> lowestTempVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getLowestTemperature());
+                XYChart.Data<String, Float> highestTempVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getHighestTemperature());
 
-            XYChart.Data<String, Double> gasVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getCumulativeGasUsage());
-            XYChart.Data<String, Double> electricVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getCumulativeElectricUsage());
-            XYChart.Data<String, Float> lowestTempVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getLowestTemperature());
-            XYChart.Data<String, Float> highestTempVisualizationDataPoint = new XYChart.Data<>(currentDate, homeData.getHighestTemperature());
+                naturalGasUsageSeries.setNode(new DataPopup(gasLabel));
+                electricUsageSeries.setNode(new DataPopup(electricLabel));
+                lowestTemperatureSeries.setNode(new DataPopup(lowestTempLabel));
+                highestTemperatureSeries.setNode(new DataPopup(highestTempLabel));
 
-            naturalGasUsageSeries.setNode(new DataPopup(gasLabel));
-            electricUsageSeries.setNode(new DataPopup(electricLabel));
-            lowestTemperatureSeries.setNode(new DataPopup(lowestTempLabel));
-            highestTemperatureSeries.setNode(new DataPopup(highestTempLabel));
-
-            naturalGasUsageSeries.getData().add(gasVisualizationDataPoint);
-            electricUsageSeries.getData().add(electricVisualizationDataPoint);
-            lowestTemperatureSeries.getData().add(lowestTempVisualizationDataPoint);
-            highestTemperatureSeries.getData().add(highestTempVisualizationDataPoint);
+                naturalGasUsageSeries.getData().add(gasVisualizationDataPoint);
+                electricUsageSeries.getData().add(electricVisualizationDataPoint);
+                lowestTemperatureSeries.getData().add(lowestTempVisualizationDataPoint);
+                highestTemperatureSeries.getData().add(highestTempVisualizationDataPoint);
+            }
 
         }
 
@@ -99,7 +109,6 @@ public class FXMLDocumentController implements Initializable
         dataVisualizationChart.getData().add(electricUsageSeries);
         dataVisualizationChart.getData().add(lowestTemperatureSeries);
         dataVisualizationChart.getData().add(highestTemperatureSeries);
-
     }
 
     private static boolean sameDate(String date1, String date2, String date3)
@@ -109,7 +118,8 @@ public class FXMLDocumentController implements Initializable
 
     private static String getCommonStartDate(String date1, String date2, String date3)
     {
-        String latestDate = "";
+        // If all the dates are the same the first one will be returned.
+        String latestDate = date1;
 
         try {
             // Converts String date to epoc.
@@ -120,8 +130,9 @@ public class FXMLDocumentController implements Initializable
             // Finds largest epoc time.
             Long largestEpocTime = Math.max(epocDate1, Math.max(epocDate2, epocDate3));
 
+            // Converts the eopoc back to string date format.
             latestDate = new SimpleDateFormat("yyyy-MM-dd").format(largestEpocTime);
-            System.out.print("latestDate: " + latestDate);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -129,6 +140,64 @@ public class FXMLDocumentController implements Initializable
         return latestDate;
     }
 
+    // Removes all elements with dates before the desired start date.
+    private static ArrayList<GasDataPoint> setCommonGasStartDate(ArrayList<GasDataPoint> dailyGasUsage, String startDate)
+    {
+        for (int i = 0; i < dailyGasUsage.size(); i++)
+        {
+            if (!dailyGasUsage.get(i).getDate().equals(startDate))
+            {
+                dailyGasUsage.remove(i);
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return dailyGasUsage;
+    }
+
+    // Removes all elements with dates before the desired start date.
+    private static ArrayList<ElectricDataPoint> setCommonElectricStartDate(ArrayList<ElectricDataPoint> dailyElectricUsage, String startDate)
+    {
+        for (int i = 0; i < dailyElectricUsage.size(); i++)
+        {
+            if (!dailyElectricUsage.get(i).getDate().equals(startDate))
+            {
+                dailyElectricUsage.remove(i);
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return dailyElectricUsage;
+    }
+
+    // Removes all elements with dates before the desired start date.
+    private static ArrayList<TemperatureDataPoint> setCommonTemperatureStartDate(ArrayList<TemperatureDataPoint> dailyTemperatureData, String startDate)
+    {
+        for (int i = 0; i < dailyTemperatureData.size(); i++)
+        {
+            if (!dailyTemperatureData.get(i).getDate().equals(startDate))
+            {
+                dailyTemperatureData.remove(i);
+                i--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return dailyTemperatureData;
+    }
+
+    // Gets an ArrayList of HomeDataPoints(s) by aggregating data from the three other data structures.
     private static ArrayList<HomeDataPoint> getHomeData(ArrayList<GasDataPoint> dailyGasUsage,
                                                         ArrayList<ElectricDataPoint> dailyElectricUsage,
                                                         ArrayList<TemperatureDataPoint> dailyTemperatureData)
@@ -143,44 +212,9 @@ public class FXMLDocumentController implements Initializable
         String temperatureDate = dailyTemperatureData.get(0).getDate();
         String startDate = getCommonStartDate(gasDate, electricDate, temperatureDate);
 
-        for (int i = 0; i < dailyGasUsage.size(); i++)
-        {
-            if (!dailyGasUsage.get(i).getDate().equals(startDate))
-            {
-                dailyGasUsage.remove(i);
-                i--;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        for (int i = 0; i < dailyElectricUsage.size(); i++)
-        {
-            if (!dailyElectricUsage.get(i).getDate().equals(startDate))
-            {
-                dailyElectricUsage.remove(i);
-                i--;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        for (int i = 0; i < dailyTemperatureData.size(); i++)
-        {
-            if (!dailyTemperatureData.get(i).getDate().equals(startDate))
-            {
-                dailyTemperatureData.remove(i);
-                i--;
-            }
-            else
-            {
-                break;
-            }
-        }
+        dailyGasUsage = setCommonGasStartDate(dailyGasUsage, startDate);
+        dailyElectricUsage = setCommonElectricStartDate(dailyElectricUsage, startDate);
+        dailyTemperatureData = setCommonTemperatureStartDate(dailyTemperatureData, startDate);
 
         while (index < upperBound)
         {
@@ -203,9 +237,6 @@ public class FXMLDocumentController implements Initializable
 
         return dailyHomeData;
     }
-
-
-    // --------------------------------------------------------------------------------------------------------------------
 
     static class DataPopup extends StackPane
     {
@@ -248,6 +279,7 @@ public class FXMLDocumentController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+        initJanuaryVisualization();
         // TODO
     }
 

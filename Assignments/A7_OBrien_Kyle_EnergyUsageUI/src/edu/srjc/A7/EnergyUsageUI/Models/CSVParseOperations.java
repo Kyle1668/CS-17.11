@@ -1,9 +1,5 @@
 package edu.srjc.A7.EnergyUsageUI.Models;
 
-import edu.srjc.A7.EnergyUsageUI.Models.GasDataPoint;
-import edu.srjc.A7.EnergyUsageUI.Models.ElectricDataPoint;
-import edu.srjc.A7.EnergyUsageUI.Models.TemperatureDataPoint;
-
 import java.io.File;
 import java.util.Scanner;
 import java.util.ArrayList;
@@ -24,7 +20,6 @@ public class CSVParseOperations
             {
                 csvReader = new Scanner(powerUsageFile);
                 dailyPowerUsage = getElectricUsageSummary(csvReader);
-//                printElectricUsageSummary(dailyPowerUsage);
                 csvReader.close();
             }
             catch (FileNotFoundException e)
@@ -104,7 +99,6 @@ public class CSVParseOperations
             {
                 csvReader = new Scanner(gasUsageFile);
                 data = getGasUsageSummary(csvReader);
-//                printGasUsageSummary(data);
                 csvReader.close();
             }
             catch (FileNotFoundException e)
