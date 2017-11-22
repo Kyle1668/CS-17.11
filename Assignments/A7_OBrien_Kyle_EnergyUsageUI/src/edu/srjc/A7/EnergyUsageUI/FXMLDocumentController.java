@@ -1,3 +1,13 @@
+//        Kyle O'Brien
+//        11-16-17
+//        CS 17.11
+//        A7 - Energy Usage UI
+//
+//        This program parses the electric, gas, and temperature data from three CSV files and aggregates them
+//        to a single data structure called a HomeDataPoint. There the aggregated data is visualized using a
+//        line chart. The user is able to cycle through the months in the UI. The program is divided into
+//        the model (Data Points), view (UI), and controller.
+
 package edu.srjc.A7.EnergyUsageUI;
 
 import edu.srjc.A7.EnergyUsageUI.Models.*;
@@ -10,9 +20,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
