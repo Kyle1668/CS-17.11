@@ -13,6 +13,6 @@
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="JavaFXApplicationTemplate" >
     <param name="requiredFXVersion" value="8.0+"/>
   </applet-desc>
-  <jfx:javafx-desc  width="800" height="600" main-class="edu.srjc.finalproject.obrien.kyle.quickcafe.JavaFXApplicationTemplate"  name="JavaFXApplicationTemplate" />
+  <jfx:javafx-desc width="800" height="600" main-class="edu.srjc.finalproject.obrien.kyle.quickcafe.controllers.JavaFXApplicationController" name="JavaFXApplicationTemplate" />
   <update check="always"/>
 </jnlp>
