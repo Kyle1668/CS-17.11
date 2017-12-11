@@ -8,7 +8,6 @@ package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
@@ -17,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 
 /**
  *
@@ -40,7 +38,7 @@ public class FXMLViewController implements Initializable
         {
             String test = txtName.getText();
             label.setText("Hello there " + txtName.getText() + "!");
-            launchApp(test);
+            launchAPIRequest(test);
         }
         else
         {
@@ -55,9 +53,9 @@ public class FXMLViewController implements Initializable
         // TODO
     }
 
-    static private void launchApp(String target) throws Exception
+    static private void launchAPIRequest(String target) throws Exception
     {
-        final String request = APIRequest.formatAPIRequest(target.replace(" ", "+"));
+        final String request = APIRequest.formatAPIRequest(target);
 
         System.out.println("\n" + "HTTP API Request: " + request + "\n");
 
