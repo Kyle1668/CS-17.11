@@ -1,7 +1,5 @@
 package edu.srjc.finalproject.obrien.kyle.quickcafe.models;
 
-import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.io.BufferedReader;

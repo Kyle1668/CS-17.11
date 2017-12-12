@@ -1,0 +1,22 @@
+
+CS 17.11 Final Project To-Do
+
+Priority Tasks
+    - Cycle between API Keys is daily quota met.
+    - Add icons.
+    - Add text wrapping for name and address fields.
+    - Delete results when new search is made.
+    - Handle empty results.
+    - Error handling.
+
+Secondary Tasks
+    - Add placeholder for results section.
+    - Fade in results.
+    - Fade out results.
+    - Disable screen resizing.
+
+Before Submitting
+    - Run on three other computers. Have friends clone repo.
+    - Remove unnecessary import statements.
+    - Add documentation.
+    - Add markdown readme.

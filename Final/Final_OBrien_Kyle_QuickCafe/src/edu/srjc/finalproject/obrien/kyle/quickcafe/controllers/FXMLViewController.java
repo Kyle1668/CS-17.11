@@ -14,16 +14,19 @@ import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 
 /**
- *
- * @author 
+ * @author
  */
 public class FXMLViewController implements Initializable
 {
-    
+
     @FXML
     private Label label;
 
@@ -31,29 +34,95 @@ public class FXMLViewController implements Initializable
     private TextField txtName;
 
     @FXML
-    private void handleButtonAction(ActionEvent event) throws Exception
+    private GridPane gridPaneList;
+
+    @FXML
+    private ScrollPane scrollPaneArea;
+
+    @FXML
+    private void handleSearchButtonAction(ActionEvent event) throws Exception
     {
-        System.out.println("You clicked me!");
         if (txtName.getText().length() > 0)
         {
-            String test = txtName.getText();
-            label.setText("Hello there " + txtName.getText() + "!");
-            launchAPIRequest(test);
+            String targetLocation = txtName.getText();
+            ArrayList<Place> places = getPlacesFromAPI(targetLocation);
+            Insets padding = new Insets(10, 10, 10, 10);
+
+            initFirstGridRow(padding);
+
+            for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
+            {
+                int gridColSize = gridPaneList.getColumnCount();
+                double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
+
+                scrollPaneArea.setVvalue(newScrollDimensions);
+                gridPaneList.addRow(rowIndex + 1);
+
+                for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+                {
+                    initGridCell(places, rowIndex, colIndex, padding);
+                }
+            }
+
         }
         else
         {
-            label.setText("Can't you follow directions?");
+            label.setText("Error");
+        }
+    }
+
+    private void initFirstGridRow(Insets padding)
+    {
+        String[] titles = {"Name", "Address", "Type", "Google Rating", "Currently Open"};
+
+        for (int i = 0; i < 5; i++)
+        {
+            Label nameLabel = new Label(titles[i]);
+            nameLabel.setTextAlignment(TextAlignment.JUSTIFY);
+            nameLabel.setWrapText(true);
+            nameLabel.setPadding(padding);
+            gridPaneList.add(nameLabel, i, 0);
         }
 
     }
-    
+
+    private void initGridCell(ArrayList<Place> places, int rowIndex, int colIndex, Insets padding)
+    {
+        Label newCellLabel = new Label();
+        newCellLabel.setTextAlignment(TextAlignment.JUSTIFY);
+        newCellLabel.setPadding(padding);
+        newCellLabel.setWrapText(true);
+
+        switch (colIndex)
+        {
+            case 0:
+                newCellLabel.setText(places.get(rowIndex).getName());
+                break;
+            case 1:
+                newCellLabel.setText(places.get(rowIndex).getAddress());
+                break;
+            case 2:
+                newCellLabel.setText(places.get(rowIndex).getCategory());
+                break;
+            case 3:
+                newCellLabel.setText(places.get(rowIndex).getRating());
+                break;
+            case 4:
+                newCellLabel.setText(places.get(rowIndex).getIsOpenNow());
+                break;
+        }
+
+        gridPaneList.add(newCellLabel, colIndex, rowIndex + 1);
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
         // TODO
     }
 
-    static private void launchAPIRequest(String target) throws Exception
+    static private ArrayList<Place> getPlacesFromAPI(String target) throws Exception
     {
         final String request = APIRequest.formatAPIRequest(target);
 
@@ -68,6 +137,8 @@ public class FXMLViewController implements Initializable
             System.out.println(place.toString());
         }
 
+        return places;
+
     }
-    
+
 }
