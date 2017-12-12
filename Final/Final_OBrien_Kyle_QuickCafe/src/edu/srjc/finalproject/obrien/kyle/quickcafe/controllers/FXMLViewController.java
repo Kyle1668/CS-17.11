@@ -1,29 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
-import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
-import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import java.util.ArrayList;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.Node;
+import java.util.ResourceBundle;
 import javafx.scene.image.Image;
+import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.text.TextAlignment;
+import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
+import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 
 /**
  * @author
@@ -118,26 +111,26 @@ public class FXMLViewController implements Initializable
                 newCellLabel.setText(places.get(rowIndex).getRating());
                 break;
             case 4:
-
-                // Image source is the string URL.
-                String imageSource = places.get(rowIndex).getImage().getPhotoURL();
-
-                final ImageView selectedImage = new ImageView();
-                Image image1 = new Image(imageSource);
-
-                selectedImage.setFitWidth(200);
-                selectedImage.setFitHeight(200);
-
-                selectedImage.setImage(image1);
-
-                // Here I'm adding it to a Grid Pane.
-                gridPaneList.add(selectedImage, colIndex, rowIndex + 1);
-
+                final ImageView gridImageView = initImage(places, rowIndex);
+                gridPaneList.add(gridImageView, colIndex, rowIndex + 1);
                 break;
         }
 
         gridPaneList.add(newCellLabel, colIndex, rowIndex + 1);
 
+    }
+
+    private ImageView initImage(ArrayList<Place> places, int rowIndex)
+    {
+        final ImageView gridImageView = new ImageView();
+        String imageSource = places.get(rowIndex).getImage().getPhotoURL();
+        Image image1 = new Image(imageSource);
+
+        gridImageView.setFitWidth(200);
+        gridImageView.setFitHeight(200);
+        gridImageView.setImage(image1);
+
+        return gridImageView;
     }
 
     @Override
