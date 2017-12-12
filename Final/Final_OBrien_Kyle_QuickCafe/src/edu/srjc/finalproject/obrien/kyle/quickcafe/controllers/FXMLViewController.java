@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,7 +21,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
-
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -52,6 +53,12 @@ public class FXMLViewController implements Initializable
             Insets padding = new Insets(10, 10, 10, 10);
 
             initFirstGridRow(padding);
+
+            if (gridPaneList.getRowCount() > 1)
+            {
+                // Clears each row excluding the first.
+                gridPaneList.getChildren().remove(5, gridPaneList.getChildren().size() - 1);
+            }
 
             for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
             {

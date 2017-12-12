@@ -6,6 +6,7 @@ Priority Tasks
     - Add text wrapping for name and address fields.
     - Delete results when new search is made.
     - Handle empty results.
+    - Add Placeholder values.
     - Error handling.
 
 Secondary Tasks
