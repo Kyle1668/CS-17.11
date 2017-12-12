@@ -11,9 +11,10 @@ public class APIRequest
 
     static public String formatAPIRequest(String target)
     {
+        String[] apiKeys = {"AIzaSyDkaFm1KmYTToZTX8Z2S-Mn9rdblJOk1YY", "AIzaSyC_KZyErDtZ42CuFscO2l5YseWaV8MCHrQ"};
         String request = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
         String query = "query=Cafe+coffee+near+" + target.replace(" ", "+");
-        String apiKey = "&key=AIzaSyC_KZyErDtZ42CuFscO2l5YseWaV8MCHrQ&sensor=false";
+        String apiKey = "&key=" + apiKeys[0] + "&sensor=false";
         return request + query + apiKey;
     }
 

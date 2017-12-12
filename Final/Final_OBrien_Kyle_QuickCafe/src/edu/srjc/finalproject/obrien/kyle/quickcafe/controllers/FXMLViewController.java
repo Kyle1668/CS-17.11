@@ -21,6 +21,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
 /**
  * @author
  */
@@ -73,7 +76,7 @@ public class FXMLViewController implements Initializable
 
     private void initFirstGridRow(Insets padding)
     {
-        String[] titles = {"Name", "Address", "Type", "Google Rating", "Currently Open"};
+        String[] titles = {"Name", "Address", "Currently Open", "Google Rating", "Image"};
 
         for (int i = 0; i < 5; i++)
         {
@@ -102,13 +105,27 @@ public class FXMLViewController implements Initializable
                 newCellLabel.setText(places.get(rowIndex).getAddress());
                 break;
             case 2:
-                newCellLabel.setText(places.get(rowIndex).getCategory());
+                newCellLabel.setText(places.get(rowIndex).getIsOpenNow());
                 break;
             case 3:
                 newCellLabel.setText(places.get(rowIndex).getRating());
                 break;
             case 4:
-                newCellLabel.setText(places.get(rowIndex).getIsOpenNow());
+
+                // Image source is the string URL.
+                String imageSource = places.get(rowIndex).getImage().getPhotoURL();
+
+                final ImageView selectedImage = new ImageView();
+                Image image1 = new Image(imageSource);
+
+                selectedImage.setFitWidth(200);
+                selectedImage.setFitHeight(200);
+
+                selectedImage.setImage(image1);
+
+                // Here I'm adding it to a Grid Pane.
+                gridPaneList.add(selectedImage, colIndex, rowIndex + 1);
+
                 break;
         }
 

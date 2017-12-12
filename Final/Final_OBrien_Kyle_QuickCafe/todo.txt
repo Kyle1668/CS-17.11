@@ -2,14 +2,14 @@
 CS 17.11 Final Project To-Do
 
 Priority Tasks
-    - Cycle between API Keys is daily quota met.
-    - Add icons.
+    - Implement asynchronous API calls and grid population.
     - Add text wrapping for name and address fields.
     - Delete results when new search is made.
     - Handle empty results.
     - Error handling.
 
 Secondary Tasks
+    - Cycle between API Keys if daily quota met.
     - Add placeholder for results section.
     - Fade in results.
     - Fade out results.
