@@ -17,7 +17,7 @@ public class JavaFXApplicationController extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        Parent root = FXMLLoader.load(getClass().getResource("views/FXMLDocument.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../views/FXMLDocument.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

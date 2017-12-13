@@ -3,8 +3,7 @@ CS 17.11 Final Project To-Do
 
 Priority Tasks
     - Implement asynchronous API calls and grid population.
-    - Add text wrapping for name and address fields.
-    - Delete results when new search is made.
+    - Have initial view dimensions based on user's screen dimensions.
     - Handle empty results.
     - Add Placeholder values.
     - Error handling.
@@ -19,5 +18,6 @@ Secondary Tasks
 Before Submitting
     - Run on three other computers. Have friends clone repo.
     - Remove unnecessary import statements.
+    - Make code more D.R.Y.
     - Add documentation.
     - Add markdown readme.

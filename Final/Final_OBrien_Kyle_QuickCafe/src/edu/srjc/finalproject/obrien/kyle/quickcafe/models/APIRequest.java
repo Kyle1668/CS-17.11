@@ -51,7 +51,7 @@ public class APIRequest
 
     static public ArrayList<Place> parsePlacesResponse(String httpGetRequest) throws Exception
     {
-        String inputLine = "";
+        String inputLine = new String();
         URL apiURL = new URL(httpGetRequest);
         URLConnection apiConnection = apiURL.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
