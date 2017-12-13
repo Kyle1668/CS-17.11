@@ -1,6 +1,7 @@
 
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
+import javafx.application.*;
 import java.net.URL;
 import javafx.fxml.FXML;
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ public class FXMLViewController implements Initializable
     private Label label;
 
     @FXML
+    private Label statusLabel;
+
+    @FXML
     private TextField txtName;
 
     @FXML
@@ -39,8 +43,10 @@ public class FXMLViewController implements Initializable
     @FXML
     private void handleSearchButtonAction(ActionEvent event) throws Exception
     {
+
         if (txtName.getText().length() > 0)
         {
+
             String targetLocation = txtName.getText();
             ArrayList<Place> places = getPlacesFromAPI(targetLocation);
             Insets padding = new Insets(10, 10, 10, 10);
@@ -66,6 +72,9 @@ public class FXMLViewController implements Initializable
                     initGridCell(places, rowIndex, colIndex, padding);
                 }
             }
+
+
+            statusLabel.setText(places.size() + " Results Found");
 
         }
         else
