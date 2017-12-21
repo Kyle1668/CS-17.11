@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.TextAlignment;
+
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 
@@ -40,18 +41,31 @@ public class FXMLViewController implements Initializable
     @FXML
     private ScrollPane scrollPaneArea;
 
+    private volatile ArrayList<Place> places = new ArrayList<>();
+
     @FXML
     private void handleSearchButtonAction(ActionEvent event) throws Exception
     {
-
         if (txtName.getText().length() > 0)
         {
-
             String targetLocation = txtName.getText();
-            ArrayList<Place> places = getPlacesFromAPI(targetLocation);
             Insets padding = new Insets(10, 10, 10, 10);
 
-            initFirstGridRow(padding);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    String[] loadingStates = {"Searching.", "Searching..", "Searching..", "Searching..."};
+
+                    while (places.size() == 0)
+                    {
+                        for (String state : loadingStates)
+                        {
+                            statusLabel.setText(state);
+
+                        }
+                    }
+                }
+            });
 
             if (gridPaneList.getRowCount() > 1)
             {
@@ -59,28 +73,34 @@ public class FXMLViewController implements Initializable
                 gridPaneList.getChildren().remove(5, gridPaneList.getChildren().size() - 1);
             }
 
-            for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
-            {
-                int gridColSize = gridPaneList.getColumnCount();
-                double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
-
-                scrollPaneArea.setVvalue(newScrollDimensions);
-                gridPaneList.addRow(rowIndex + 1);
-
-                for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+            new Thread(() -> {
+                try
                 {
-                    initGridCell(places, rowIndex, colIndex, padding);
+                    places = getPlacesFromAPI(targetLocation);
+                    beginGridInitialization(padding);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
-            }
-
-
-            statusLabel.setText(places.size() + " Results Found");
+            }).start();
 
         }
         else
         {
             label.setText("Error");
         }
+    }
+
+    private void beginGridInitialization(Insets padding)
+    {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                initFirstGridRow(padding);
+                initGridRow(padding);
+                statusLabel.setText(places.size() + " Results Found");
+            }
+        });
     }
 
     private void initFirstGridRow(Insets padding)
@@ -95,7 +115,23 @@ public class FXMLViewController implements Initializable
             nameLabel.setPadding(padding);
             gridPaneList.add(nameLabel, i, 0);
         }
+    }
 
+    private void initGridRow(Insets padding)
+    {
+        for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
+        {
+            int gridColSize = gridPaneList.getColumnCount();
+            double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
+
+            scrollPaneArea.setVvalue(newScrollDimensions);
+            gridPaneList.addRow(rowIndex + 1);
+
+            for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+            {
+                initGridCell(places, rowIndex, colIndex, padding);
+            }
+        }
     }
 
     private void initGridCell(ArrayList<Place> places, int rowIndex, int colIndex, Insets padding)
@@ -151,12 +187,9 @@ public class FXMLViewController implements Initializable
     static private ArrayList<Place> getPlacesFromAPI(String target) throws Exception
     {
         final String request = APIRequest.formatAPIRequest(target);
+        ArrayList<Place> places = APIRequest.parsePlacesResponse(request);
 
         System.out.println("\n" + "HTTP API Request: " + request + "\n");
-
-//        APIRequest.printAPIResponse(getAPIRequest(request));
-
-        ArrayList<Place> places = APIRequest.parsePlacesResponse(request);
 
         for (Place place : places)
         {
@@ -164,7 +197,6 @@ public class FXMLViewController implements Initializable
         }
 
         return places;
-
     }
 
 }
