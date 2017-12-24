@@ -6,10 +6,13 @@ import edu.srjc.finalproject.obrien.kyle.quickcafe.models.PlacesList;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 
 import java.net.URL;
+
 import javafx.fxml.FXML;
 import javafx.application.*;
 import javafx.geometry.Insets;
+
 import java.util.ResourceBundle;
+
 import javafx.scene.image.Image;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -44,12 +47,13 @@ public class FXMLViewController implements Initializable
     @FXML
     private void handleSearchButtonAction(ActionEvent event) throws Exception
     {
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+        {
             if (txtName.getText().length() > 0)
             {
                 statusLabel.setText("Searching");
 
-                PlacesList places = null;
+                PlacesList places = new PlacesList();
                 String targetLocation = txtName.getText();
                 Insets padding = new Insets(10, 10, 10, 10);
 
@@ -85,20 +89,12 @@ public class FXMLViewController implements Initializable
                 }
                 else
                 {
-                    String status = places.getErrorMessage().equals("") ? "0 Results Found" : places.getErrorMessage();
+                    boolean noAPIErrors = places.getErrorMessage().equals("");
+                    String status = noAPIErrors ? "0 Results Found" : places.getErrorMessage();
                     statusLabel.setText(status);
-                    statusLabel.setWrapText(false);
                 }
-
-            }
-            else
-            {
-                statusLabel.setText("Error");
             }
         });
-
-
-
     }
 
     private void initFirstGridRow(Insets padding)
@@ -123,7 +119,8 @@ public class FXMLViewController implements Initializable
         newCellLabel.setPadding(padding);
         newCellLabel.setWrapText(true);
 
-        Platform.runLater(() -> {
+        Platform.runLater(() ->
+        {
             switch (colIndex)
             {
                 case 0:
@@ -155,7 +152,6 @@ public class FXMLViewController implements Initializable
             }
 
         });
-
 
 
     }
