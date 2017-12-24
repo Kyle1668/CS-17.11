@@ -36,6 +36,9 @@ public class FXMLViewController implements Initializable
     private Label statusLabel;
 
     @FXML
+    private int searchAnimation;
+
+    @FXML
     private TextField txtName;
 
     @FXML
@@ -122,7 +125,6 @@ public class FXMLViewController implements Initializable
         newCellLabel.setWrapText(true);
 
         Platform.runLater(() -> {
-            System.out.println(colIndex);
             switch (colIndex)
             {
                 case 0:
@@ -182,8 +184,6 @@ public class FXMLViewController implements Initializable
         final String request = APIRequest.formatAPIRequest(target);
 
         System.out.println("\n" + "HTTP API Request: " + request + "\n");
-
-//        APIRequest.printAPIResponse(getAPIRequest(request));
 
         ArrayList<Place> places = APIRequest.parsePlacesResponse(request);
 
