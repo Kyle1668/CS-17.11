@@ -19,6 +19,10 @@ import javafx.scene.text.TextAlignment;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
+import javafx.concurrent.WorkerStateEvent;
+
 /**
  * @author
  */
@@ -43,44 +47,56 @@ public class FXMLViewController implements Initializable
     @FXML
     private void handleSearchButtonAction(ActionEvent event) throws Exception
     {
-
-        if (txtName.getText().length() > 0)
-        {
-
-            String targetLocation = txtName.getText();
-            ArrayList<Place> places = getPlacesFromAPI(targetLocation);
-            Insets padding = new Insets(10, 10, 10, 10);
-
-            initFirstGridRow(padding);
-
-            if (gridPaneList.getRowCount() > 1)
+        Platform.runLater(() -> {
+            if (txtName.getText().length() > 0)
             {
-                // Clears each row excluding the first.
-                gridPaneList.getChildren().remove(5, gridPaneList.getChildren().size() - 1);
-            }
+                statusLabel.setText("Searching");
 
-            for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
-            {
-                int gridColSize = gridPaneList.getColumnCount();
-                double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
+                ArrayList<Place> places = null;
+                String targetLocation = txtName.getText();
+                Insets padding = new Insets(10, 10, 10, 10);
 
-                scrollPaneArea.setVvalue(newScrollDimensions);
-                gridPaneList.addRow(rowIndex + 1);
-
-                for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+                try
                 {
-                    initGridCell(places, rowIndex, colIndex, padding);
+                    places = getPlacesFromAPI(targetLocation);
+                } catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
+
+                if (gridPaneList.getRowCount() > 1)
+                {
+                    // Clears each row excluding the first.
+                    gridPaneList.getChildren().remove(5, gridPaneList.getChildren().size() - 1);
+                }
+
+                Platform.runLater(() -> {
+                    initFirstGridRow(padding);
+                });
+
+                for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
+                {
+                    int gridColSize = gridPaneList.getColumnCount();
+                    double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
+
+                    scrollPaneArea.setVvalue(newScrollDimensions);
+                    gridPaneList.addRow(rowIndex + 1);
+
+                    for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+                    {
+                        initGridCell(places, rowIndex, colIndex, padding);
+                    }
+                }
+
             }
+            else
+            {
+                label.setText("Error");
+            }
+        });
 
 
-            statusLabel.setText(places.size() + " Results Found");
 
-        }
-        else
-        {
-            label.setText("Error");
-        }
     }
 
     private void initFirstGridRow(Insets padding)
@@ -105,27 +121,40 @@ public class FXMLViewController implements Initializable
         newCellLabel.setPadding(padding);
         newCellLabel.setWrapText(true);
 
-        switch (colIndex)
-        {
-            case 0:
-                newCellLabel.setText(places.get(rowIndex).getName());
-                break;
-            case 1:
-                newCellLabel.setText(places.get(rowIndex).getAddress());
-                break;
-            case 2:
-                newCellLabel.setText(places.get(rowIndex).getIsOpenNow());
-                break;
-            case 3:
-                newCellLabel.setText(places.get(rowIndex).getRating());
-                break;
-            case 4:
-                final ImageView gridImageView = initImage(places, rowIndex);
-                gridPaneList.add(gridImageView, colIndex, rowIndex + 1);
-                break;
-        }
+        Platform.runLater(() -> {
+            System.out.println(colIndex);
+            switch (colIndex)
+            {
+                case 0:
+                    newCellLabel.setText(places.get(rowIndex).getName());
+                    break;
+                case 1:
+                    newCellLabel.setText(places.get(rowIndex).getAddress());
+                    break;
+                case 2:
+                    newCellLabel.setText(places.get(rowIndex).getIsOpenNow());
+                    break;
+                case 3:
+                    newCellLabel.setText(places.get(rowIndex).getRating());
+                    break;
+                case 4:
+                    final ImageView gridImageView = initImage(places, rowIndex);
+                    gridPaneList.add(gridImageView, colIndex, rowIndex + 1);
+                    break;
+            }
 
-        gridPaneList.add(newCellLabel, colIndex, rowIndex + 1);
+            gridPaneList.add(newCellLabel, colIndex, rowIndex + 1);
+
+            boolean fullyLoaded = (rowIndex - 1) * colIndex == places.size();
+
+            if (fullyLoaded)
+            {
+                statusLabel.setText(places.size() + " Results Found");
+            }
+
+        });
+
+
 
     }
 
