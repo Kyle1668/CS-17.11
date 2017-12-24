@@ -51,8 +51,6 @@ public class FXMLViewController implements Initializable
         {
             if (txtName.getText().length() > 0)
             {
-                statusLabel.setText("Searching");
-
                 PlacesList places = new PlacesList();
                 String targetLocation = txtName.getText();
                 Insets padding = new Insets(10, 10, 10, 10);
@@ -60,39 +58,14 @@ public class FXMLViewController implements Initializable
                 try
                 {
                     places = getPlacesFromAPI(targetLocation);
+                    initGridPane(places, padding);
+                    statusLabel.setText("Searching");
                 } catch (Exception e)
                 {
                     e.printStackTrace();
+                    statusLabel.setText("API Error");
                 }
 
-                if (gridPaneList.getRowCount() > 1)
-                {
-                    // Clears each row excluding the first.
-                    gridPaneList.getChildren().clear();
-                }
-
-                if (places != null && places.size() > 0)
-                {
-                    for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
-                    {
-                        int gridColSize = gridPaneList.getColumnCount();
-                        double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
-
-                        scrollPaneArea.setVvalue(newScrollDimensions);
-                        gridPaneList.addRow(rowIndex + 1);
-
-                        for (int colIndex = 0; colIndex < gridColSize; colIndex++)
-                        {
-                            initGridCell(places, rowIndex, colIndex, padding);
-                        }
-                    }
-                }
-                else
-                {
-                    boolean noAPIErrors = places.getErrorMessage().equals("");
-                    String status = noAPIErrors ? "0 Results Found" : places.getErrorMessage();
-                    statusLabel.setText(status);
-                }
             }
         });
     }
@@ -110,6 +83,38 @@ public class FXMLViewController implements Initializable
             gridPaneList.add(nameLabel, i, 0);
         }
 
+    }
+
+    private void initGridPane(PlacesList places, Insets padding)
+    {
+        if (gridPaneList.getRowCount() > 1)
+        {
+            // Clears each row excluding the first.
+            gridPaneList.getChildren().clear();
+        }
+
+        if (places != null && places.size() > 0)
+        {
+            for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
+            {
+                int gridColSize = gridPaneList.getColumnCount();
+                double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
+
+                scrollPaneArea.setVvalue(newScrollDimensions);
+                gridPaneList.addRow(rowIndex + 1);
+
+                for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+                {
+                    initGridCell(places, rowIndex, colIndex, padding);
+                }
+            }
+        }
+        else
+        {
+            boolean noAPIErrors = places.getErrorMessage().equals("");
+            String status = noAPIErrors ? "0 Results Found" : places.getErrorMessage();
+            statusLabel.setText(status);
+        }
     }
 
     private void initGridCell(PlacesList places, int rowIndex, int colIndex, Insets padding)
@@ -175,13 +180,12 @@ public class FXMLViewController implements Initializable
         // TODO
     }
 
-    static private PlacesList getPlacesFromAPI(String target) throws Exception
+    private PlacesList getPlacesFromAPI(String target) throws Exception
     {
         final String request = APIRequest.formatAPIRequest(target);
+        PlacesList places = APIRequest.parsePlacesResponse(request);
 
         System.out.println("\n" + "HTTP API Request: " + request + "\n");
-
-        PlacesList places = APIRequest.parsePlacesResponse(request);
 
         for (Place place : places)
         {
@@ -189,7 +193,6 @@ public class FXMLViewController implements Initializable
         }
 
         return places;
-
     }
 
 }
