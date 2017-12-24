@@ -1,10 +1,13 @@
 
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
-import javafx.application.*;
+import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
+import edu.srjc.finalproject.obrien.kyle.quickcafe.models.PlacesList;
+import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
+
 import java.net.URL;
 import javafx.fxml.FXML;
-import java.util.ArrayList;
+import javafx.application.*;
 import javafx.geometry.Insets;
 import java.util.ResourceBundle;
 import javafx.scene.image.Image;
@@ -16,12 +19,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.text.TextAlignment;
-import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
-import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
-
-import javafx.concurrent.Task;
-import javafx.event.EventHandler;
-import javafx.concurrent.WorkerStateEvent;
 
 /**
  * @author
@@ -52,7 +49,7 @@ public class FXMLViewController implements Initializable
             {
                 statusLabel.setText("Searching");
 
-                ArrayList<Place> places = null;
+                PlacesList places = null;
                 String targetLocation = txtName.getText();
                 Insets padding = new Insets(10, 10, 10, 10);
 
@@ -88,7 +85,9 @@ public class FXMLViewController implements Initializable
                 }
                 else
                 {
-                    statusLabel.setText("0 Results Found");
+                    String status = places.getErrorMessage().equals("") ? "0 Results Found" : places.getErrorMessage();
+                    statusLabel.setText(status);
+                    statusLabel.setWrapText(false);
                 }
 
             }
@@ -117,7 +116,7 @@ public class FXMLViewController implements Initializable
 
     }
 
-    private void initGridCell(ArrayList<Place> places, int rowIndex, int colIndex, Insets padding)
+    private void initGridCell(PlacesList places, int rowIndex, int colIndex, Insets padding)
     {
         Label newCellLabel = new Label();
         newCellLabel.setTextAlignment(TextAlignment.JUSTIFY);
@@ -161,7 +160,7 @@ public class FXMLViewController implements Initializable
 
     }
 
-    private ImageView initImage(ArrayList<Place> places, int rowIndex)
+    private ImageView initImage(PlacesList places, int rowIndex)
     {
         final ImageView gridImageView = new ImageView();
         String imageSource = places.get(rowIndex).getImage().getPhotoURL();
@@ -180,13 +179,13 @@ public class FXMLViewController implements Initializable
         // TODO
     }
 
-    static private ArrayList<Place> getPlacesFromAPI(String target) throws Exception
+    static private PlacesList getPlacesFromAPI(String target) throws Exception
     {
         final String request = APIRequest.formatAPIRequest(target);
 
         System.out.println("\n" + "HTTP API Request: " + request + "\n");
 
-        ArrayList<Place> places = APIRequest.parsePlacesResponse(request);
+        PlacesList places = APIRequest.parsePlacesResponse(request);
 
         for (Place place : places)
         {

@@ -49,14 +49,14 @@ public class APIRequest
         return returnString.toString();
     }
 
-    static public ArrayList<Place> parsePlacesResponse(String httpGetRequest) throws Exception
+    static public PlacesList parsePlacesResponse(String httpGetRequest) throws Exception
     {
         String inputLine = new String();
         URL apiURL = new URL(httpGetRequest);
         URLConnection apiConnection = apiURL.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
 
-        ArrayList<Place> places = new ArrayList<>();
+        PlacesList places = new PlacesList();
         places.add(new Place());
 
         while ((inputLine = in.readLine()) != null)
@@ -73,7 +73,7 @@ public class APIRequest
         return places;
     }
 
-    static private void handleInput(ArrayList<Place> places, String inputLine)
+    static private void handleInput(PlacesList places, String inputLine)
     {
         String attribute = inputLine.split(":")[0].split("\"")[1];
 
@@ -111,11 +111,12 @@ public class APIRequest
             case "error_message":
                 String[] erorrLine = inputLine.split(" : ");
                 String message = erorrLine[1].split("\"")[1].split(",")[0];
+                places.setErrorMessage(message);
                 break;
         }
     }
 
-    static private void assignAddressData(ArrayList<Place> places, String address)
+    static private void assignAddressData(PlacesList places, String address)
     {
         if (!places.get(places.size() - 1).getAddress().equals(""))
         {
@@ -129,7 +130,7 @@ public class APIRequest
         }
     }
 
-    static private void assignNameData(ArrayList<Place> places, String name)
+    static private void assignNameData(PlacesList places, String name)
     {
         if (!places.get(places.size() - 1).getName().equals(""))
         {
@@ -143,7 +144,7 @@ public class APIRequest
         }
     }
 
-    static private void assignIsOpenDataData(ArrayList<Place> places, String isOpenValue)
+    static private void assignIsOpenDataData(PlacesList places, String isOpenValue)
     {
         if (!places.get(places.size() - 1).getIsOpenNow().equals(""))
         {
@@ -158,7 +159,7 @@ public class APIRequest
         }
     }
 
-    static private void assignImageData(ArrayList<Place> places, String photoReference)
+    static private void assignImageData(PlacesList places, String photoReference)
     {
         if (!places.get(places.size() - 1).getImage().getPhotoReference().equals(""))
         {
@@ -173,7 +174,7 @@ public class APIRequest
         }
     }
 
-    static private void assignRatingData(ArrayList<Place> places, String rating)
+    static private void assignRatingData(PlacesList places, String rating)
     {
         if (!places.get(places.size() - 1).getRating().equals(""))
         {
@@ -200,7 +201,7 @@ public class APIRequest
         return "N/A";
     }
 
-    static private void assignCategoryData(ArrayList<Place> places, String category)
+    static private void assignCategoryData(PlacesList places, String category)
     {
         if (!places.get(places.size() - 1).getCategory().equals(""))
         {
@@ -215,7 +216,7 @@ public class APIRequest
         }
     }
 
-    static private void cleanPlacesData(ArrayList<Place> places)
+    static private void cleanPlacesData(PlacesList places)
     {
         Place currentPlace = new Place();
 
