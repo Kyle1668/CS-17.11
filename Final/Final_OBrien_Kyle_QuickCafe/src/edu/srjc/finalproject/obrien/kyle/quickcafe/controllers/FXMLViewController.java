@@ -36,9 +36,6 @@ public class FXMLViewController implements Initializable
     private Label statusLabel;
 
     @FXML
-    private int searchAnimation;
-
-    @FXML
     private TextField txtName;
 
     @FXML
@@ -70,31 +67,34 @@ public class FXMLViewController implements Initializable
                 if (gridPaneList.getRowCount() > 1)
                 {
                     // Clears each row excluding the first.
-                    gridPaneList.getChildren().remove(5, gridPaneList.getChildren().size() - 1);
+                    gridPaneList.getChildren().clear();
                 }
 
-                Platform.runLater(() -> {
-                    initFirstGridRow(padding);
-                });
-
-                for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
+                if (places != null && places.size() > 0)
                 {
-                    int gridColSize = gridPaneList.getColumnCount();
-                    double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
-
-                    scrollPaneArea.setVvalue(newScrollDimensions);
-                    gridPaneList.addRow(rowIndex + 1);
-
-                    for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+                    for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
                     {
-                        initGridCell(places, rowIndex, colIndex, padding);
+                        int gridColSize = gridPaneList.getColumnCount();
+                        double newScrollDimensions = scrollPaneArea.getVvalue() + (scrollPaneArea.getVvalue() * .5);
+
+                        scrollPaneArea.setVvalue(newScrollDimensions);
+                        gridPaneList.addRow(rowIndex + 1);
+
+                        for (int colIndex = 0; colIndex < gridColSize; colIndex++)
+                        {
+                            initGridCell(places, rowIndex, colIndex, padding);
+                        }
                     }
+                }
+                else
+                {
+                    statusLabel.setText("0 Results Found");
                 }
 
             }
             else
             {
-                label.setText("Error");
+                statusLabel.setText("Error");
             }
         });
 
@@ -151,6 +151,7 @@ public class FXMLViewController implements Initializable
 
             if (fullyLoaded)
             {
+                initFirstGridRow(padding);
                 statusLabel.setText(places.size() + " Results Found");
             }
 

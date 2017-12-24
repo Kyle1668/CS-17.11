@@ -108,6 +108,10 @@ public class APIRequest
                 String category = parseCategoryInput(typesArray);
                 assignCategoryData(places, category);
                 break;
+            case "error_message":
+                String[] erorrLine = inputLine.split(" : ");
+                String message = erorrLine[1].split("\"")[1].split(",")[0];
+                break;
         }
     }
 
