@@ -5,7 +5,8 @@
 // QuickCafe: Course Final Project
 // Course: CS 17.11
 
-// File Summary:
+// File Summary: This file serves as the controller for the entire application. Here the "XML document.fxml"
+// for the view is loaded, the scene is set, and the application is launched.
 
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
