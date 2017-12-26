@@ -251,9 +251,11 @@ public class APIRequest
             HttpURLConnection.setFollowRedirects(false);
             HttpURLConnection connection = (HttpURLConnection) new URL(apiPath).openConnection();
             connection.setRequestMethod("HEAD");
-            boolean goodConnection = (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
+
+            boolean isGoodConnection = (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
             HttpURLConnection.setFollowRedirects(true);
-            return goodConnection;
+
+            return isGoodConnection;
         } catch (Exception e)
         {
             return false;

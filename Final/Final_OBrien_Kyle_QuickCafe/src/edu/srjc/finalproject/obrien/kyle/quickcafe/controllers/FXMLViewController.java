@@ -5,10 +5,11 @@ import edu.srjc.finalproject.obrien.kyle.quickcafe.models.PlacesList;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 
 import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.application.*;
 import javafx.geometry.Insets;
-import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -24,9 +25,6 @@ import javafx.scene.text.TextAlignment;
  */
 public class FXMLViewController implements Initializable
 {
-
-    @FXML
-    private Label label;
 
     @FXML
     private Label statusLabel;
@@ -59,7 +57,8 @@ public class FXMLViewController implements Initializable
                     {
                         statusLabel.setText(places.getErrorMessage());
                     }
-                    else {
+                    else
+                    {
                         statusLabel.setText("Searching");
                         initGridPane(places, padding);
                     }
@@ -175,12 +174,6 @@ public class FXMLViewController implements Initializable
         return gridImageView;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb)
-    {
-        // TODO
-    }
-
     private PlacesList getPlacesFromAPI(String target) throws Exception
     {
         final String request = APIRequest.formatAPIRequest(target);
@@ -194,6 +187,12 @@ public class FXMLViewController implements Initializable
         }
 
         return places;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb)
+    {
+        // TODO
     }
 
 }
