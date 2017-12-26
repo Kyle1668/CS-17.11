@@ -52,14 +52,13 @@ public class FXMLViewController implements Initializable
                 try
                 {
                     places = getPlacesFromAPI(targetLocation);
+                    boolean unreachableAPI = places.getErrorMessage().equals("API Is Unreachable");
+                    String searchStatus = unreachableAPI ? places.getErrorMessage() : "Searching";
 
-                    if (places.getErrorMessage().equals("API Is Unreachable"))
+                    statusLabel.setText(searchStatus);
+
+                    if (!unreachableAPI)
                     {
-                        statusLabel.setText(places.getErrorMessage());
-                    }
-                    else
-                    {
-                        statusLabel.setText("Searching");
                         initGridPane(places, padding);
                     }
 
