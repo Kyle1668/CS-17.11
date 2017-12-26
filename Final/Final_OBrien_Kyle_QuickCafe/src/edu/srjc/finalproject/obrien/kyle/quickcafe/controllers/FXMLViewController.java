@@ -55,13 +55,13 @@ public class FXMLViewController implements Initializable
                 {
                     places = getPlacesFromAPI(targetLocation);
 
-                    if (!places.getErrorMessage().equals("API Is Unreachable"))
+                    if (places.getErrorMessage().equals("API Is Unreachable"))
                     {
-                        initGridPane(places, padding);
-                        statusLabel.setText("Searching");
+                        statusLabel.setText(places.getErrorMessage());
                     }
                     else {
-                        statusLabel.setText(places.getErrorMessage());
+                        statusLabel.setText("Searching");
+                        initGridPane(places, padding);
                     }
 
                 } catch (Exception e)
@@ -164,8 +164,8 @@ public class FXMLViewController implements Initializable
 
     private ImageView initImage(PlacesList places, int rowIndex)
     {
-        final ImageView gridImageView = new ImageView();
         String imageSource = places.get(rowIndex).getImage().getPhotoURL();
+        final ImageView gridImageView = new ImageView();
         Image image1 = new Image(imageSource);
 
         gridImageView.setFitWidth(200);
