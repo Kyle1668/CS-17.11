@@ -1,74 +1,102 @@
 package edu.srjc.finalproject.obrien.kyle.quickcafe.models;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.net.URLConnection;
 import java.io.InputStreamReader;
+import java.net.UnknownHostException;
+import java.net.HttpURLConnection;
 
 public class APIRequest
 {
 
-    static public String formatAPIRequest(String target)
+    static public String formatAPIRequest(String target) throws UnknownHostException
     {
         String[] apiKeys = {"AIzaSyDkaFm1KmYTToZTX8Z2S-Mn9rdblJOk1YY", "AIzaSyC_KZyErDtZ42CuFscO2l5YseWaV8MCHrQ"};
         String request = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
         String query = "query=Cafe+coffee+near+" + target.replace(" ", "+");
         String apiKey = "&key=" + apiKeys[0] + "&sensor=false";
-        return request + query + apiKey;
+        String apiURL = request + query + apiKey;
+        boolean validURL = testInternetConnection(apiURL);
+        return validURL ? apiURL : "No Connection";
     }
 
     static public void printAPIResponse(String httpGetRequest) throws Exception
     {
-        URL apiURL = new URL(httpGetRequest);
-        URLConnection apiConnection = apiURL.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
-
-        while (in.readLine() != null)
+        if (!httpGetRequest.equals("No Connection"))
         {
-            System.out.println(in.readLine());
-        }
+            URL apiURL = new URL(httpGetRequest);
+            URLConnection apiConnection = apiURL.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
 
-        in.close();
+            while (in.readLine() != null)
+            {
+                System.out.println(in.readLine());
+            }
+
+            in.close();
+        }
+        else
+        {
+            System.out.println("API Is Unreachable.");
+        }
     }
 
     static public String returnStringAPIResponse(String httpGetRequest) throws Exception
     {
-        URL apiURL = new URL(httpGetRequest);
-        StringBuilder returnString = new StringBuilder();
-        URLConnection apiConnection = apiURL.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
-
-        while (in.readLine() != null)
+        if (!httpGetRequest.equals("No Connection"))
         {
-            returnString.append(in.readLine());
+            URL apiURL = new URL(httpGetRequest);
+            StringBuilder returnString = new StringBuilder();
+            URLConnection apiConnection = apiURL.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
+
+            while (in.readLine() != null)
+            {
+                returnString.append(in.readLine());
+            }
+
+            in.close();
+
+            return returnString.toString();
         }
-
-        in.close();
-
-        return returnString.toString();
+        else
+        {
+            System.out.println("API Is Unreachable.");
+            return "";
+        }
     }
 
     static public PlacesList parsePlacesResponse(String httpGetRequest) throws Exception
     {
-        String inputLine = new String();
-        URL apiURL = new URL(httpGetRequest);
-        URLConnection apiConnection = apiURL.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
-
         PlacesList places = new PlacesList();
-        places.add(new Place());
 
-        while ((inputLine = in.readLine()) != null)
+        if (!httpGetRequest.equals("No Connection"))
         {
-            if (inputLine.split(":").length > 1)
-            {
-                handleInput(places, inputLine);
-            }
-        }
+            String inputLine = new String();
+            URL apiURL = new URL(httpGetRequest);
+            URLConnection apiConnection = apiURL.openConnection();
 
-        in.close();
-        cleanPlacesData(places);
+            BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
+
+            places.add(new Place());
+
+            while ((inputLine = in.readLine()) != null)
+            {
+                if (inputLine.split(":").length > 1)
+                {
+                    handleInput(places, inputLine);
+                }
+            }
+
+            in.close();
+            cleanPlacesData(places);
+        }
+        else
+        {
+            places.setErrorMessage("API Is Unreachable");
+            System.out.println(places.getErrorMessage());
+        }
 
         return places;
     }
@@ -109,8 +137,8 @@ public class APIRequest
                 assignCategoryData(places, category);
                 break;
             case "error_message":
-                String[] erorrLine = inputLine.split(" : ");
-                String message = erorrLine[1].split("\"")[1].split(",")[0];
+                String[] erorLine = inputLine.split(" : ");
+                String message = erorLine[1].split("\"")[1].split(",")[0];
                 places.setErrorMessage(message);
                 break;
         }
@@ -213,6 +241,20 @@ public class APIRequest
         {
             Place last = places.get(places.size() - 1);
             last.setCategory(category);
+        }
+    }
+
+    private static boolean testInternetConnection(String apiPath)
+    {
+        try
+        {
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection connection = (HttpURLConnection) new URL(apiPath).openConnection();
+            connection.setRequestMethod("HEAD");
+            return (connection.getResponseCode() == HttpURLConnection.HTTP_OK);
+        } catch (Exception e)
+        {
+            return false;
         }
     }
 

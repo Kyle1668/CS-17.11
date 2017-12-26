@@ -1,4 +1,3 @@
-
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
@@ -6,13 +5,10 @@ import edu.srjc.finalproject.obrien.kyle.quickcafe.models.PlacesList;
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.APIRequest;
 
 import java.net.URL;
-
 import javafx.fxml.FXML;
 import javafx.application.*;
 import javafx.geometry.Insets;
-
 import java.util.ResourceBundle;
-
 import javafx.scene.image.Image;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -58,8 +54,16 @@ public class FXMLViewController implements Initializable
                 try
                 {
                     places = getPlacesFromAPI(targetLocation);
-                    initGridPane(places, padding);
-                    statusLabel.setText("Searching");
+
+                    if (!places.getErrorMessage().equals("API Is Unreachable"))
+                    {
+                        initGridPane(places, padding);
+                        statusLabel.setText("Searching");
+                    }
+                    else {
+                        statusLabel.setText(places.getErrorMessage());
+                    }
+
                 } catch (Exception e)
                 {
                     e.printStackTrace();
@@ -82,7 +86,6 @@ public class FXMLViewController implements Initializable
             nameLabel.setPadding(padding);
             gridPaneList.add(nameLabel, i, 0);
         }
-
     }
 
     private void initGridPane(PlacesList places, Insets padding)
@@ -157,8 +160,6 @@ public class FXMLViewController implements Initializable
             }
 
         });
-
-
     }
 
     private ImageView initImage(PlacesList places, int rowIndex)
