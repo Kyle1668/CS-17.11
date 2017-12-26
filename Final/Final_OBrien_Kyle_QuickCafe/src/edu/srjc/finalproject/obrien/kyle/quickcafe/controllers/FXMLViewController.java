@@ -1,3 +1,18 @@
+// File Header
+// Kyle O'Brien
+// Email: kyledevinobrien1@gmail.com
+// Date: 12/24/17
+// QuickCafe: Course Final Project
+// Course: CS 17.11
+
+// File Summary: This file handles the logic that controls and manipulates the view.
+// The "handleSearchButtonAction" method is fired when the search button is clicked
+// in the view. If the search text box is not empty, a request is made to the Google
+// Places API via static methods in the "API request" class. The result of which
+// is used to initialize a grid pane JavaFX node in the view. This is done
+// asynchronously so that the view does not freeze while the background
+// process is underway.
+
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
 import edu.srjc.finalproject.obrien.kyle.quickcafe.models.Place;
@@ -30,7 +45,7 @@ public class FXMLViewController implements Initializable
     private Label statusLabel;
 
     @FXML
-    private TextField txtName;
+    private TextField locationSearchInput;
 
     @FXML
     private GridPane gridPaneList;
@@ -41,12 +56,13 @@ public class FXMLViewController implements Initializable
     @FXML
     private void handleSearchButtonAction(ActionEvent event) throws Exception
     {
+        // Logic in Platform.runLater blocks are executed asynchronously.
         Platform.runLater(() ->
         {
-            if (txtName.getText().length() > 0)
+            if (locationSearchInput.getText().length() > 0)
             {
                 PlacesList places = new PlacesList();
-                String targetLocation = txtName.getText();
+                String targetLocation = locationSearchInput.getText();
                 Insets padding = new Insets(10, 10, 10, 10);
 
                 try
@@ -90,12 +106,14 @@ public class FXMLViewController implements Initializable
     {
         if (gridPaneList.getRowCount() > 1)
         {
-            // Clears each row excluding the first.
             gridPaneList.getChildren().clear();
         }
 
-        if (places != null && places.size() > 0)
+        if (places.size() > 0)
         {
+            // Populates the grid pane by adding a row and increases the scroll area for each element in the PlacesList.
+            // For each row, each column is initialized with it's corresponding data from the current element in places.
+
             for (int rowIndex = 0; rowIndex < places.size(); rowIndex++)
             {
                 int gridColSize = gridPaneList.getColumnCount();

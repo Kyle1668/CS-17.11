@@ -40,8 +40,6 @@ public class APIRequest
     {
         if (!httpGetRequest.equals("No Connection"))
         {
-            // Opens up a buffer stream from the JSON response from the API.
-
             URL apiURL = new URL(httpGetRequest);
             URLConnection apiConnection = apiURL.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
@@ -63,14 +61,10 @@ public class APIRequest
     {
         if (!httpGetRequest.equals("No Connection"))
         {
-            // Opens up a buffer stream from the JSON response from the API.
-
             URL apiURL = new URL(httpGetRequest);
             StringBuilder returnString = new StringBuilder();
             URLConnection apiConnection = apiURL.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
-
-            // Print the JSON line by line.
 
             while (in.readLine() != null)
             {
@@ -94,16 +88,12 @@ public class APIRequest
 
         if (!httpGetRequest.equals("No Connection"))
         {
-            // Opens up a buffer stream from the JSON response from the API.
-
             String inputLine = new String();
             URL apiURL = new URL(httpGetRequest);
             URLConnection apiConnection = apiURL.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
 
             places.add(new Place());
-
-            // Parse the JSON line by line.
 
             while ((inputLine = in.readLine()) != null)
             {
@@ -275,7 +265,7 @@ public class APIRequest
     {
         try
         {
-            // Open up and pings a Http connection to check if it's reachable.
+            // Open up and pings a Http connection to the API URL to check if it's reachable.
 
             HttpURLConnection.setFollowRedirects(false);
             HttpURLConnection connection = (HttpURLConnection) new URL(apiPath).openConnection();
@@ -293,11 +283,12 @@ public class APIRequest
 
     static private void cleanPlacesData(PlacesList places)
     {
+        // Remove places in the list that are missing important information.
+
         Place currentPlace = new Place();
 
         for (int index = 0; index < places.size(); index++)
         {
-            // Remove places in the list that are missing important information.
             currentPlace = places.get(index);
 
             if (currentPlace.getName().equals(""))

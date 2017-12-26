@@ -1,3 +1,5 @@
+# This script is used to automate pushing the current commit to Github.
+
 import os
 
 message = raw_input("\n" + "Enter Commit Message: ")

@@ -1,8 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+// File Header
+// Kyle O'Brien
+// Email: kyledevinobrien1@gmail.com
+// Date: 12/24/17
+// QuickCafe: Course Final Project
+// Course: CS 17.11
+
+// File Summary:
+
 package edu.srjc.finalproject.obrien.kyle.quickcafe.controllers;
 
 import javafx.application.Application;
@@ -15,7 +19,7 @@ import javafx.scene.control.ProgressIndicator;
 
 public class JavaFXApplicationController extends Application
 {
-    
+
     @Override
     public void start(Stage stage) throws Exception
     {

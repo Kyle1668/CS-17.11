@@ -1,4 +1,16 @@
-// Example of a request for coffee shops in Santa Rosa
+// File Header
+// Kyle O'Brien
+// Email: kyledevinobrien1@gmail.com
+// Date: 12/24/17
+// QuickCafe: Course Final Project
+// Course: CS 17.11
+
+// File Summary: This JSON file server as an example of the possible response data for
+// coffee shops in Santa Rosa, CA. The program parses through this data
+// and extracts the most important information. Nonessential such
+// as the longitude and latitude are ignored.
+
+// NOTE: Remove these comments if this file is to be parsed. JSON by default does not support comments.
 
 {
   "html_attributions" : [],
