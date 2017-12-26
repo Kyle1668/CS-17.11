@@ -1,3 +1,15 @@
+// File Header
+// Kyle O'Brien
+// Email: kyledevinobrien1@gmail.com
+// Date: 12/24/17
+// QuickCafe: Course Final Project
+// Course: CS 17.11
+
+// File Summary: This class contains a number of methods that handle requests to the Google Places API.
+// All methods are static and the class is not meant to be initialized. Besides methods that
+// interact directly with the Places API in terms of making and receiving requests, methods
+// such as "testInternetConnection" and "cleanPlacesData" serve as private helper methods.
+
 package edu.srjc.finalproject.obrien.kyle.quickcafe.models;
 
 import java.net.URL;
@@ -13,10 +25,13 @@ public class APIRequest
     static public String formatAPIRequest(String target) throws UnknownHostException
     {
         String[] apiKeys = {"AIzaSyDkaFm1KmYTToZTX8Z2S-Mn9rdblJOk1YY", "AIzaSyC_KZyErDtZ42CuFscO2l5YseWaV8MCHrQ"};
+
+        // Get Request Parameters
         String request = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
         String query = "query=Cafe+coffee+near+" + target.replace(" ", "+");
         String apiKey = "&key=" + apiKeys[0] + "&sensor=false";
         String apiURL = request + query + apiKey;
+
         boolean validURL = testInternetConnection(apiURL);
         return validURL ? apiURL : "No Connection";
     }
@@ -25,6 +40,8 @@ public class APIRequest
     {
         if (!httpGetRequest.equals("No Connection"))
         {
+            // Opens up a buffer stream from the JSON response from the API.
+
             URL apiURL = new URL(httpGetRequest);
             URLConnection apiConnection = apiURL.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
@@ -46,10 +63,14 @@ public class APIRequest
     {
         if (!httpGetRequest.equals("No Connection"))
         {
+            // Opens up a buffer stream from the JSON response from the API.
+
             URL apiURL = new URL(httpGetRequest);
             StringBuilder returnString = new StringBuilder();
             URLConnection apiConnection = apiURL.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
+
+            // Print the JSON line by line.
 
             while (in.readLine() != null)
             {
@@ -73,13 +94,16 @@ public class APIRequest
 
         if (!httpGetRequest.equals("No Connection"))
         {
+            // Opens up a buffer stream from the JSON response from the API.
+
             String inputLine = new String();
             URL apiURL = new URL(httpGetRequest);
             URLConnection apiConnection = apiURL.openConnection();
-
             BufferedReader in = new BufferedReader(new InputStreamReader(apiConnection.getInputStream()));
 
             places.add(new Place());
+
+            // Parse the JSON line by line.
 
             while ((inputLine = in.readLine()) != null)
             {
@@ -103,6 +127,9 @@ public class APIRequest
 
     static private void handleInput(PlacesList places, String inputLine)
     {
+        // Method handles a line of JSON from the API response. Depending on which attribute is current,
+        // different logic and parsing operations are performed.
+
         String attribute = inputLine.split(":")[0].split("\"")[1];
 
         switch (attribute)
@@ -248,6 +275,8 @@ public class APIRequest
     {
         try
         {
+            // Open up and pings a Http connection to check if it's reachable.
+
             HttpURLConnection.setFollowRedirects(false);
             HttpURLConnection connection = (HttpURLConnection) new URL(apiPath).openConnection();
             connection.setRequestMethod("HEAD");
@@ -268,7 +297,9 @@ public class APIRequest
 
         for (int index = 0; index < places.size(); index++)
         {
+            // Remove places in the list that are missing important information.
             currentPlace = places.get(index);
+
             if (currentPlace.getName().equals(""))
             {
                 places.remove(index);

@@ -1,3 +1,14 @@
+// File Header
+// Kyle O'Brien
+// Email: kyledevinobrien1@gmail.com
+// Date: 12/24/17
+// QuickCafe: Course Final Project
+// Course: CS 17.11
+
+// File Summary: This class serves as a model for each unique place returned from the API storing only
+// the necessary data.  Excluding the "image" member, all other data members are String types. This
+// avoids many issues regarding errors in casting non-string types to Strings and vice-versa.
+
 package edu.srjc.finalproject.obrien.kyle.quickcafe.models;
 
 public class Place
